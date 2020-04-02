@@ -1,32 +1,59 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="app">
+        <router-view/>
     </div>
-    <router-view/>
-  </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+    #app {
+        background-color: #f0f2f5;
     }
-  }
-}
+
+    .is-text-decoration-line :hover {
+        text-decoration-line: underline;
+    }
+
+    .mr-10 {
+        margin-right: 10px;
+    }
+
+    .is-36x36 {
+        width: 36px;
+        height: 36px;
+    }
+
+    .is-40x40 {
+        width: 40px;
+        height: 40px;
+    }
+
+    .icon-send {
+        fill: #3578E5;
+    }
+
+    .btn-send-comment {
+        margin-left: 10px;
+        font-size: 25px;
+        color: #3578E5;
+    }
+
+    .btn-send-comment :hover {
+        cursor: pointer;
+    }
+
+    .custom-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 10px 0;
+        margin: 15px 0;
+    }
+</style>
+
+<style lang="scss">
+    @import "~bulma/sass/utilities/_all";
+
+    $primary: #00d1b2;
+
+    @import "~bulma";
+    @import "~buefy/src/scss/buefy";
 </style>

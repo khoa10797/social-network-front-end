@@ -1,0 +1,181 @@
+<template>
+  <div class="custom-card card">
+    <div class="post-top">
+      <PostUserInfo :avatar="post.user.avatar" :user-name="post.user.name" :time="post.created_at"/>
+      <PostContent :content="post.content"/>
+    </div>
+
+    <ImageGrid :images="post.images"/>
+
+    <div class="post-info">
+      <div>
+        <router-link v-if="post.number_like > 0" :to="{path: '/abcd', query: {postId: post.post_id}}"
+                     class="has-text-grey">
+          <i class="far fa-thumbs-up" style="font-size: 18px"></i>
+          {{post.number_like}}
+        </router-link>
+      </div>
+
+      <div>
+        <router-link v-if="post.number_comment > 0" :to="{path: '/abcd', query: {postId: post.post_id}}"
+                     class="has-text-grey">
+          {{post.number_comment}} bình luận
+        </router-link>
+      </div>
+    </div>
+
+    <div class="container-action-post">
+      <div class="action-post">
+        <div class="columns is-mobile">
+          <button class="column button is-white" v-on:click="updateUserStatus">
+            <i class=" fas fa-thumbs-up" :style="classBtnLikePost"></i>
+            Thích
+          </button>
+          <button class="column button is-white" v-on:click="loadComment">
+            <i class="far fa-comment"></i> Bình luận
+          </button>
+          <button class="column button is-white">
+            <i class="far fa-share-square"></i> Chia sẻ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-comment">
+      <div class="input-comment is-flex">
+        <div class="mr-10">
+          <figure class="image is-40x40">
+            <img class="is-rounded" :src="require(`@/assets/images/${post.user.avatar}`)" alt=""/>
+          </figure>
+        </div>
+
+        <ResizableInput
+          style="background-color: #f0f2f5"
+          placeholder="Viết bình luận..."
+          v-model="valueComment"
+          rows="1"
+        />
+
+        <div class="btn-send-comment is-flex" @click="sendComment">
+          <svg height="30px" width="30px" viewBox="0 0 24 24">
+            <path class="icon-send"
+                  d="M16.6915026,12.4744748 L3.50612381,13.2599618 C3.19218622,13.2599618 3.03521743,13.4170592 3.03521743,13.5741566 L1.15159189,20.0151496 C0.8376543,20.8006365 0.99,21.89 1.77946707,22.52 C2.41,22.99 3.50612381,23.1 4.13399899,22.8429026 L21.714504,14.0454487 C22.6563168,13.5741566 23.1272231,12.6315722 22.9702544,11.6889879 C22.8132856,11.0605983 22.3423792,10.4322088 21.714504,10.118014 L4.13399899,1.16346272 C3.34915502,0.9 2.40734225,1.00636533 1.77946707,1.4776575 C0.994623095,2.10604706 0.8376543,3.0486314 1.15159189,3.99121575 L3.03521743,10.4322088 C3.03521743,10.5893061 3.34915502,10.7464035 3.50612381,10.7464035 L16.6915026,11.5318905 C16.6915026,11.5318905 17.1624089,11.5318905 17.1624089,12.0031827 C17.1624089,12.4744748 16.6915026,12.4744748 16.6915026,12.4744748 Z"
+                  stroke="none"></path>
+          </svg>
+        </div>
+      </div>
+      <div class="list-item">
+        <Comment v-for="comment in comments" :key="comment.comment_id" :comment="comment"/>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  import * as CommentService from '../services/comment';
+  import * as PostService from '../services/post';
+  import PostUserInfo from "./PostUserInfo";
+  import ImageGrid from "./ImageGrid";
+  import PostContent from "./PostContent";
+  import Comment from "./Comment";
+  import ResizableInput from "./ResizableInput";
+
+  export default {
+    name: "Post",
+    components: {
+      PostUserInfo,
+      ImageGrid,
+      PostContent,
+      Comment,
+      ResizableInput
+    },
+    props: {
+      post: Object
+    },
+    data() {
+      return {
+        valueComment: ''
+      }
+    },
+    methods: {
+      loadComment: async function () {
+        await this.$store.dispatch('setCommentByPost', this.post.post_id);
+      },
+      sendComment: async function () {
+        if (this.valueComment.length > 0) {
+          await CommentService.sendComment({
+            'post_id': this.$props.post.post_id,
+            'user_id': this.$props.post.user.user_id,
+            'content': this.valueComment
+          });
+          this.valueComment = '';
+        }
+      },
+      updateUserStatus: async function () {
+        let userStatus = this.$props.post.user_status === 'like' ? 'dislike' : 'like';
+        let response = await PostService.updateUserStatus({
+          'user_id': this.$store.state.user.user_id,
+          'post_id': this.$props.post.post_id,
+          'user_status': userStatus
+        });
+        this.$store.state.posts.find(it => it.post_id === this.$props.post.post_id).user_status = response.data.user_status;
+      }
+    },
+    computed: {
+      comments() {
+        let post = this.$store.state.posts.find(it => it.post_id === this.post.post_id);
+        return post ? post.comments : [];
+      },
+      classBtnLikePost() {
+        return this.post.user_status === 'like' ? {color: "#2078F4"} : {}
+      }
+    }
+  };
+</script>
+
+<style lang="scss" scoped>
+  .list-item {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .post-top {
+    padding: 0 10px;
+  }
+
+  .post-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+
+  .container-action-post {
+    padding: 0 20px;
+  }
+
+  .action-post {
+    border-top: #ced0d4 1px solid;
+    border-bottom: #ced0d4 1px solid;
+
+    .columns {
+      margin: 0;
+    }
+
+    .button {
+      padding: 0;
+    }
+  }
+
+  .container-comment {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .input-comment {
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+  }
+</style>
