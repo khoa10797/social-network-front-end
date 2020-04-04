@@ -5,8 +5,18 @@
 </template>
 
 <style lang="scss">
+    @import "~bulma/sass/utilities/_all";
+
+    $primary: #00d1b2;
+
+    @import "~bulma";
+    @import "~buefy/src/scss/buefy";
+</style>
+
+<style lang="scss">
     #app {
         background-color: #f0f2f5;
+        padding-bottom: 20px;
     }
 
     .is-text-decoration-line :hover {
@@ -47,13 +57,14 @@
         padding: 10px 0;
         margin: 15px 0;
     }
-</style>
 
-<style lang="scss">
-    @import "~bulma/sass/utilities/_all";
+    .justify-content-center {
+        display: flex;
+        justify-content: center;
+    }
 
-    $primary: #00d1b2;
-
-    @import "~bulma";
-    @import "~buefy/src/scss/buefy";
+    .align-item-center {
+        display: flex;
+        align-items: center;
+    }
 </style>
