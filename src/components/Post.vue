@@ -1,7 +1,15 @@
 <template>
     <div class="custom-card card">
         <div class="post-top">
-            <PostUserInfo :avatar="post.user.avatar" :user-name="post.user.name" :time="post.created_at"/>
+            <div class="post-header">
+                <PostUserInfo :avatar="post.user.avatar" :user-name="post.user.name" :time="post.created_at"/>
+                <div class="btn-menu-post">
+                    <div>
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+            </div>
+
             <PostContent :content="post.content"/>
         </div>
 
@@ -180,4 +188,32 @@
         padding-right: 20px;
         padding-top: 10px;
     }
+
+    .post-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .btn-menu-post {
+        position: relative;
+
+        div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border: none;
+            padding: unset;
+            border-radius: 50%;
+            -webkit-box-shadow: none !important;
+        }
+
+        :hover {
+            background: #f0f2f5;
+            cursor: pointer;
+        }
+    }
+
 </style>

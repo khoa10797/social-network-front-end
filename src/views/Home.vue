@@ -47,6 +47,42 @@
                         </div>
                     </div>
 
+                    <div class="image-upload">
+                        <input id="fileInput" type="file" @change="previewImage" accept="image/*"></input>
+                        <!--                                                <div v-if="imageData != null">-->
+                        <!--                                                    <img class="preview" :src="imageUrl" alt="">-->
+                        <!--                                                </div>-->
+                        <div class="preview-image">
+                            <div v-if="imagePreviewUrl != null" class="btn-remove-image" @click="removeImage">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <img :src="imagePreviewUrl" alt="">
+                        </div>
+                    </div>
+
+                    <div class="menu-bottom-popup-add-post">
+                        <div>
+                            <span>Thêm vào bài viết</span>
+                        </div>
+                        <div class="btn-upload-image">
+                            <label for="fileInput">
+                                <figure>
+                                    <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 32 32"
+                                    >
+                                        <path
+                                                class="path1"
+                                                d="M9.5 19c0 3.59 2.91 6.5 6.5 6.5s6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5-6.5 2.91-6.5 6.5zM30 8h-7c-0.5-2-1-4-3-4h-8c-2 0-2.5 2-3 4h-7c-1.1 0-2 0.9-2 2v18c0 1.1 0.9 2 2 2h28c1.1 0 2-0.9 2-2v-18c0-1.1-0.9-2-2-2zM16 27.875c-4.902 0-8.875-3.973-8.875-8.875s3.973-8.875 8.875-8.875c4.902 0 8.875 3.973 8.875 8.875s-3.973 8.875-8.875 8.875zM30 14h-4v-2h4v2z"
+                                        ></path>
+                                    </svg>
+                                </figure>
+                            </label>
+                        </div>
+                    </div>
+
                     <div>
                         <button class="button is-info" @click="sendPost">Đăng</button>
                     </div>
@@ -59,6 +95,7 @@
 <script>
     import Navbar from "../components/Navbar";
     import Post from "../components/Post";
+    import firebase from "firebase";
 
     export default {
         name: "Home",
@@ -69,7 +106,10 @@
         data() {
             return {
                 showAddPostModal: false,
-                postContent: ''
+                postContent: '',
+                imageData: null,
+                imageName: '',
+                imagePreviewUrl: null,
             }
         },
         computed: {
@@ -95,11 +135,43 @@
                 if (this.postContent.length > 0) {
                     await this.$store.dispatch('addPostAction', {
                         'user_id': this.$store.state.user.user_id,
-                        'content': this.postContent
+                        'content': this.postContent,
+                        'images': [this.imagePreviewUrl]
                     });
                     this.showAddPostModal = false;
                     this.postContent = '';
                 }
+            },
+            previewImage: function (event) {
+                this.imageData = event.target.files[0];
+                this.uploadImage();
+            },
+            uploadImage: function () {
+                let fileName = this.imageData.name.split('.');
+                this.imageName = fileName[0] + this.$moment(new Date()).format('YYYYMMDD_hhmmss') + '.' + fileName[1];
+
+                const storageRef = firebase.storage().ref(`/images/${this.imageName}`);
+                let uploadTask = storageRef.put(this.imageData);
+
+                uploadTask.on(`state_changed`, snapshot => {
+                    }, error => {
+                        console.log(error.message)
+                    },
+                    () => {
+                        uploadTask.snapshot.ref.getDownloadURL().then((url) => {
+                            this.imagePreviewUrl = url;
+                        });
+                    }
+                );
+            },
+            removeImage: function () {
+                const storageRef = firebase.storage().ref();
+                let desertRef = storageRef.child(`images/${this.imageName}`);
+                desertRef.delete().then(() => {
+                    this.imagePreviewUrl = null;
+                }).catch(function (error) {
+                    console.log(error)
+                });
             }
         }
     };
@@ -141,7 +213,7 @@
     }
 
     .card-content {
-        padding: 20px 10px;
+        padding: 10px;
 
         .align-item-center {
             margin-left: 10px;
@@ -162,5 +234,57 @@
         resize: none;
         box-shadow: none;
         -webkit-box-shadow: none !important;
+    }
+
+    .menu-bottom-popup-add-post {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        border: 1px solid #ced0d4;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 20px 0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+        div > span {
+            font-weight: 600;
+        }
+    }
+
+    #fileInput {
+        display: none;
+    }
+
+    .image-upload {
+        position: relative;
+    }
+
+    .preview-image {
+        position: relative;
+    }
+
+    .btn-upload-image {
+        :hover {
+            cursor: pointer;
+        }
+    }
+
+    .btn-remove-image {
+        width: 30px;
+        height: 30px;
+        background: #f0f2f5;;
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        border-radius: 50%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        :hover {
+            cursor: pointer;
+        }
     }
 </style>

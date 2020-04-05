@@ -45,10 +45,10 @@
         margin-left: 10px;
         font-size: 25px;
         color: #3578E5;
-    }
 
-    .btn-send-comment :hover {
-        cursor: pointer;
+        :hover {
+            cursor: pointer;
+        }
     }
 
     .custom-card {
