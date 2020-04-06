@@ -16,3 +16,7 @@ export const SET_COMMENTS_BY_POST_ID = (state, {postId, comments}) => {
 export const ADD_POST = (state, post) => {
     state.posts.push(post);
 };
+
+export const REMOVE_POST = (state, postId) => {
+    state.posts = state.posts.filter(item => item.post_id !== postId);
+};

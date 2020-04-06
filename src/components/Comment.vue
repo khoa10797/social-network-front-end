@@ -59,7 +59,7 @@
 </template>
 
 <script>
-  import * as CommentService from '../services/comment';
+  import * as CommentService from '../services/comment_service';
   import ResizableInput from "./ResizableInput";
 
   export default {

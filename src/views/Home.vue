@@ -137,9 +137,14 @@
                         'user_id': this.$store.state.user.user_id,
                         'content': this.postContent,
                         'images': [this.imagePreviewUrl]
+                    }).then(result => {
+                        this.postContent = '';
+                        this.imageData = null;
+                        this.imageName = '';
+                        this.imagePreviewUrl = null;
                     });
+
                     this.showAddPostModal = false;
-                    this.postContent = '';
                 }
             },
             previewImage: function (event) {

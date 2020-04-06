@@ -56,6 +56,7 @@
         border-radius: 10px;
         padding: 10px 0;
         margin: 15px 0;
+        position: relative;
     }
 
     .justify-content-center {
@@ -66,5 +67,20 @@
     .align-item-center {
         display: flex;
         align-items: center;
+    }
+</style>
+
+<!--override property buefy-->
+<style lang="scss">
+    .modal-card {
+        border-radius: 20px;
+    }
+
+    .modal-card-head {
+        background-color: #ffffff !important;
+    }
+
+    .modal-card-foot {
+        background-color: #ffffff !important;
     }
 </style>

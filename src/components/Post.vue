@@ -1,9 +1,26 @@
 <template>
     <div class="custom-card card">
+        <div v-if="showMenuPost" class="menu-post">
+            <ul class="menu-list">
+                <li>
+                    <a @click="confirmDeletePostDialog">
+                        <i class="far fa-trash-alt"></i>
+                        <span>Xóa bài</span>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <i class="far fa-edit"></i>
+                        <span>Chỉnh sửa</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         <div class="post-top">
             <div class="post-header">
                 <PostUserInfo :avatar="post.user.avatar" :user-name="post.user.name" :time="post.created_at"/>
-                <div class="btn-menu-post">
+                <div class="btn-menu-post" @click="showMenuPost = !showMenuPost">
                     <div>
                         <i class="fas fa-ellipsis-h"></i>
                     </div>
@@ -80,8 +97,8 @@
 </template>
 
 <script>
-    import * as CommentService from '../services/comment';
-    import * as PostService from '../services/post';
+    import * as CommentService from '../services/comment_service';
+    import * as PostService from '../services/post_service';
     import PostUserInfo from "./PostUserInfo";
     import ImageGrid from "./ImageGrid";
     import PostContent from "./PostContent";
@@ -104,7 +121,8 @@
         },
         data() {
             return {
-                valueComment: ''
+                valueComment: '',
+                showMenuPost: false
             }
         },
         methods: {
@@ -129,6 +147,24 @@
                     'user_status': userStatus
                 });
                 this.$store.state.posts.find(it => it.post_id === this.$props.post.post_id).user_status = response.data.user_status;
+            },
+            confirmDeletePostDialog: function () {
+                this.showMenuPost = false;
+                this.$buefy.dialog.confirm({
+                    title: 'Xóa bài đăng',
+                    message: 'Bạn có chắc muốn <b>xóa</b> bài đăng này? Hành động này không thể khôi phục.',
+                    cancelText: 'Hủy',
+                    confirmText: 'Xóa bài',
+                    type: 'is-danger',
+                    hasIcon: true,
+                    onConfirm: () => {
+                        this.$store.dispatch('removePostAction', this.post.post_id);
+                        this.$buefy.toast.open({
+                            message: 'Xóa bài thành công!',
+                            type: 'is-success'
+                        });
+                    }
+                })
             }
         },
         computed: {
@@ -197,6 +233,7 @@
 
     .btn-menu-post {
         position: relative;
+        margin-right: 10px;
 
         div {
             display: flex;
@@ -216,4 +253,27 @@
         }
     }
 
+    .menu-post {
+        position: absolute;
+        width: 300px;
+        right: 20px;
+        top: 60px;
+        padding: 10px;
+        z-index: 1000;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+
+        .menu-list {
+            i {
+                margin-right: 20px;
+                font-size: 18px;
+                width: 15px;
+            }
+
+            span {
+                font-weight: 700;
+            }
+        }
+    }
 </style>
