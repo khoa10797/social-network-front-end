@@ -4,7 +4,7 @@
       <div class="card-image mr-10">
         <figure class="image is-40x40">
           <router-link to="/">
-            <img class="is-rounded" :src="require(`@/assets/images/${comment.user.avatar}`)" alt=""/>
+            <img class="is-rounded" :src="require(`@/assets/images/${comment.user_owner.avatar}`)" alt=""/>
           </router-link>
         </figure>
       </div>
@@ -13,7 +13,7 @@
         <div class="comment-content">
           <router-link to="/">
             <p class="has-text-black is-text-decoration-line">
-              <b>{{comment.user.name}}</b>
+              <b>{{comment.user_owner.name}}</b>
             </p>
           </router-link>
 
@@ -84,7 +84,7 @@
         if (this.valueReplyComment.length > 0) {
           CommentService.sendComment({
             'post_id': this.$props.comment.post_id,
-            'user_id': this.$props.comment.user.user_id,
+            'user_owner_id': this.$props.comment.user_owner.user_id,
             'parent_id': this.$props.comment.comment_id,
             'content': this.valueReplyComment
           }).then(response => {

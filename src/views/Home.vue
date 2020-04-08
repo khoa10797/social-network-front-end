@@ -134,7 +134,7 @@
             sendPost: async function () {
                 if (this.postContent.length > 0) {
                     await this.$store.dispatch('addPostAction', {
-                        'user_id': this.$store.state.user.user_id,
+                        'user_owner_id': this.$store.state.user.user_id,
                         'content': this.postContent,
                         'images': [this.imagePreviewUrl]
                     }).then(result => {

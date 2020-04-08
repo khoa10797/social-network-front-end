@@ -19,7 +19,7 @@
 
         <div class="post-top">
             <div class="post-header">
-                <PostUserInfo :avatar="post.user.avatar" :user-name="post.user.name" :time="post.created_at"/>
+                <PostUserInfo :avatar="post.user_owner.avatar" :user-name="post.user_owner.name" :time="post.created_at"/>
                 <div class="btn-menu-post" @click="showMenuPost = !showMenuPost">
                     <div>
                         <i class="fas fa-ellipsis-h"></i>
@@ -70,7 +70,7 @@
             <div class="input-comment is-flex">
                 <div class="mr-10">
                     <figure class="image is-40x40">
-                        <img class="is-rounded" :src="require(`@/assets/images/${post.user.avatar}`)" alt=""/>
+                        <img class="is-rounded" :src="require(`@/assets/images/${post.user_owner.avatar}`)" alt=""/>
                     </figure>
                 </div>
 
@@ -133,7 +133,7 @@
                 if (this.valueComment.length > 0) {
                     await CommentService.sendComment({
                         'post_id': this.$props.post.post_id,
-                        'user_id': this.$props.post.user.user_id,
+                        'user_owner_id': this.$props.post.user_owner.user_id,
                         'content': this.valueComment
                     });
                     this.valueComment = '';
