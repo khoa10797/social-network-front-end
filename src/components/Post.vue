@@ -104,8 +104,6 @@
     import PostContent from "./PostContent";
     import Comment from "./Comment";
     import ResizableInput from "./ResizableInput";
-    import SockJs from "sockjs-client";
-    import Stomp from "webstomp-client";
 
     export default {
         name: "Post",
