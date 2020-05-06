@@ -126,10 +126,11 @@
         },
         methods: {
             getUser: async function () {
-                await this.$store.dispatch('getUserByIdAction', '5e5bc9c6958dba414452a851');
+                let user = localStorage.getItem('user');
+                await this.$store.dispatch('setUserAction', JSON.parse(user));
             },
             getPostByUser: async function () {
-                await this.$store.dispatch('getPostByUserIdAction', '5e5bc9c6958dba414452a851');
+                await this.$store.dispatch('getPostByUserIdAction', this.user.user_id);
             },
             sendPost: async function () {
                 if (this.postContent.length > 0) {

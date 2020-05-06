@@ -2,9 +2,8 @@ import * as UserService from '../services/user_service';
 import * as PostService from '../services/post_service';
 import * as CommentService from '../services/comment_service';
 
-export const getUserByIdAction = async ({commit}, userId) => {
-    let response = await UserService.getById(userId);
-    commit('SET_USER', response.data);
+export const setUserAction = async ({commit}, user) => {
+    commit('SET_USER', user);
 };
 
 export const getPostByUserIdAction = async ({commit}, userId) => {

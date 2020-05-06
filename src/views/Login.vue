@@ -12,7 +12,7 @@
                                 <img class="is-rounded" src="../assets/icons/majinbuu.png" alt="">
                             </figure>
                         </div>
-                        <form>
+                        <div>
                             <div class="field">
                                 <div class="control">
                                     <input class="input is-large" type="text" placeholder="Tên tài khoản" autofocus=""
@@ -32,7 +32,7 @@
                             <button class="button is-block is-info is-large is-fullwidth" v-on:click="login">
                                 Đăng nhập<i class="fa fa-sign-in" aria-hidden="true"></i>
                             </button>
-                        </form>
+                        </div>
                     </div>
                     <p class="has-text-grey">
                         <a href="../">Đăng kí</a> &nbsp;·&nbsp;
@@ -63,9 +63,17 @@
                     'password': this.password
                 });
 
-                if (response.access_token !== undefined) {
-                    localStorage.setItem('access_token', response.access_token);
+                if (response.status_code === 200) {
+                    localStorage.setItem('access_token', response.data.access_token);
+                    localStorage.setItem('user', JSON.stringify(response.data.user))
                     window.location.href = "/";
+                } else {
+                    this.$buefy.toast.open({
+                        duration: 5000,
+                        message: response.error,
+                        position: 'is-top',
+                        type: 'is-danger'
+                    })
                 }
             }
         }
