@@ -4,8 +4,6 @@
             <div class="container has-text-centered">
                 <div class="column is-4 is-offset-4">
                     <h3 class="title has-text-black">Đăng nhập</h3>
-                    <hr class="login-hr">
-                    <p class="subtitle has-text-black">Vui lòng đăng nhập để tiếp tục.</p>
                     <div class="box">
                         <div class="justify-content-center logo-login">
                             <figure class="image is-128x128">
@@ -58,22 +56,24 @@
         },
         methods: {
             login: async function () {
-                let response = await UserService.login({
-                    'user_name': this.userName,
-                    'password': this.password
-                });
+                try {
+                    let response = await UserService.login({
+                        'user_name': this.userName,
+                        'password': this.password
+                    });
 
-                if (response.status_code === 200) {
-                    localStorage.setItem('access_token', response.data.access_token);
-                    localStorage.setItem('user', JSON.stringify(response.data.user))
-                    window.location.href = "/";
-                } else {
+                    if (response.status_code === 200) {
+                        localStorage.setItem('access_token', response.data.access_token);
+                        localStorage.setItem('user', JSON.stringify(response.data.user))
+                        window.location.href = "/";
+                    }
+                } catch (ex) {
                     this.$buefy.toast.open({
                         duration: 5000,
-                        message: response.error,
+                        message: ex.response.data.error,
                         position: 'is-top',
                         type: 'is-danger'
-                    })
+                    });
                 }
             }
         }

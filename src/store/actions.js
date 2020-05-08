@@ -11,6 +11,11 @@ export const getPostByUserIdAction = async ({commit}, userId) => {
     commit('SET_POSTS_BY_USER_ID', response.data);
 };
 
+export const getTrendingPostAction = async ({commit}) => {
+    let response = await PostService.getTrendingPost();
+    commit('SET_POSTS_BY_USER_ID', response.data);
+};
+
 export const getCommentByPostIdAction = async ({commit}, postId) => {
     let response = await CommentService.getCommentByPost(postId);
     commit('SET_COMMENTS_BY_POST_ID', {postId: postId, comments: response.data});

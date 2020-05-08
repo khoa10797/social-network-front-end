@@ -37,3 +37,8 @@ export const remove = async (postId) => {
 
     return response.status;
 };
+
+export const getTrendingPost = async () => {
+    let response = await baseRequest.get('/post/trending');
+    return response.data;
+};

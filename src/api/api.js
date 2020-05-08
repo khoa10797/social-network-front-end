@@ -5,13 +5,20 @@ export const baseRequest = axios.create({
     timeout: 5000
 });
 
-baseRequest.interceptors.request.use(config => {
+baseRequest.interceptors.request.use(request => {
     let token = localStorage.getItem('access_token');
     if (token) {
-        config.headers['Authorization'] = token;
+        request.headers['Authorization'] = token;
     }
 
-    return config;
-}, (error => {
+    return request;
+}, error => {
     return Promise.reject(error);
-}));
+});
+
+/*
+baseRequest.interceptors.response.use(response => {
+    return response;
+}, error => {
+    return Promise.reject(error.response);
+});*/

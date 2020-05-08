@@ -70,7 +70,7 @@
             <div class="input-comment is-flex">
                 <div class="mr-10">
                     <figure class="image is-40x40">
-                        <img class="is-rounded" :src="require(`@/assets/images/${post.user_owner.avatar}`)" alt=""/>
+                        <img class="is-rounded" :src="post.user_owner.avatar" alt=""/>
                     </figure>
                 </div>
 

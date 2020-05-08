@@ -3,7 +3,7 @@
     <div class="card-image mr-10">
       <figure class="image is-40x40">
         <router-link to="/">
-          <img class="is-rounded" :src="require(`@/assets/images/${avatar}`)" alt=""/>
+          <img class="is-rounded" :src="avatar" alt=""/>
         </router-link>
       </figure>
     </div>

@@ -6,7 +6,8 @@
                 <div>
                     <figure class="image is-40x40">
                         <router-link to="/">
-                            <img class="is-rounded" :src="require(`@/assets/images/${user.avatar}`)" alt=""/>
+                            <img v-if="user != null" class="is-rounded" :src="user.avatar" alt=""/>
+                            <img v-else class="is-rounded" :src="DEFAULT_AVATAR" alt="DEFAULT_AVATAR"/>
                         </router-link>
                     </figure>
                 </div>
@@ -29,12 +30,13 @@
                         <div>
                             <figure class="image is-40x40">
                                 <router-link to="/">
-                                    <img class="is-rounded" :src="require(`@/assets/images/${user.avatar}`)" alt=""/>
+                                    <img v-if="user != null" class="is-rounded" :src="user.avatar" alt=""/>
+                                    <img v-else class="is-rounded" :src="DEFAULT_AVATAR" alt=""/>
                                 </router-link>
                             </figure>
                         </div>
                         <div class="align-item-center">
-                            <span><b>{{user.name}}</b></span>
+                            <span v-if="user != null"><b>{{user.name}}</b></span>
                         </div>
                     </div>
 
@@ -96,6 +98,7 @@
     import Navbar from "../components/Navbar";
     import Post from "../components/Post";
     import firebase from "firebase";
+    import {Constant} from "../commons/constant"
 
     export default {
         name: "Home",
@@ -110,6 +113,7 @@
                 imageData: null,
                 imageName: '',
                 imagePreviewUrl: null,
+                DEFAULT_AVATAR: Constant.DEFAULT_AVATAR
             }
         },
         computed: {
@@ -130,7 +134,12 @@
                 await this.$store.dispatch('setUserAction', JSON.parse(user));
             },
             getPostByUser: async function () {
-                await this.$store.dispatch('getPostByUserIdAction', this.user.user_id);
+                let user = JSON.parse(localStorage.getItem('user'));
+                if (user === null) {
+                    await this.$store.dispatch('getTrendingPostAction');
+                } else {
+                    await this.$store.dispatch('getPostByUserIdAction', this.user.user_id);
+                }
             },
             sendPost: async function () {
                 if (this.postContent.length > 0) {
