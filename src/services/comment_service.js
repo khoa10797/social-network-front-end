@@ -9,3 +9,7 @@ export const sendComment = async (comment) => {
     let response = await baseRequest.post('/comment', comment);
     return response.data;
 };
+
+export const deleteComment = async (commentId) => {
+    await baseRequest.delete(`/comment/${commentId}`);
+};

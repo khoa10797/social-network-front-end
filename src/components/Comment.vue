@@ -10,19 +10,37 @@
             </div>
 
             <div class="right-parent-comment">
-                <div class="comment-content">
-                    <router-link to="/">
-                        <p class="has-text-black is-text-decoration-line">
-                            <b>{{comment.user_owner.name}}</b>
-                        </p>
-                    </router-link>
+                <div class="container-comment-content">
+                    <div class="comment-content">
+                        <router-link to="/">
+                            <p class="has-text-black is-text-decoration-line">
+                                <b>{{comment.user_owner.name}}</b>
+                            </p>
+                        </router-link>
 
-                    <p class="has-text-black">
-                        {{comment.content}}
-                    </p>
+                        <p class="has-text-black">
+                            {{comment.content}}
+                        </p>
+                    </div>
+
+
+                    <div class="action-comment-right">
+                        <i @click="showMenuComment = !showMenuComment" class="fas fa-ellipsis-h"></i>
+
+                        <div v-if="showMenuComment" class="menu-comment">
+                            <ul class="menu-list">
+                                <li>
+                                    <a @click="deleteComment"><span>Xóa bài</span></a>
+                                </li>
+                                <li>
+                                    <a><span>Chỉnh sửa</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="action-comment">
+                <div class="action-comment-bottom">
                     <span>Thích</span>
                     <span @click="openInputComment()">Trả lời</span>
                 </div>
@@ -77,30 +95,27 @@
         data() {
             return {
                 showInputComment: false,
+                showMenuComment: false,
                 valueReplyComment: ''
             }
         },
         methods: {
             sendChildComment: async function () {
                 if (this.valueReplyComment.length > 0) {
-                    let response = await CommentService.sendComment({
+                    await this.$store.dispatch('addChildCommentAction', {
                         'post_id': this.$props.comment.post_id,
                         'user_owner_id': this.$props.comment.user_owner.user_id,
                         'parent_id': this.$props.comment.comment_id,
                         'content': this.valueReplyComment
-                    });
-
-                    let comment = response.data;
-                    await this.$store.dispatch('addChildComment', {
-                        postId: comment.post_id,
-                        parentId: comment.parent_id,
-                        comment: comment
                     });
                     this.valueReplyComment = '';
                 }
             },
             openInputComment: function () {
                 this.showInputComment = true;
+            },
+            deleteComment: async function () {
+
             }
         }
     }
@@ -116,6 +131,11 @@
         display: flex;
         flex-direction: row;
         margin-top: 5px;
+    }
+
+    .container-comment-content {
+        display: flex;
+        position: relative;
     }
 
     .comment-content {
@@ -140,7 +160,7 @@
         flex-direction: column;
     }
 
-    .action-comment {
+    .action-comment-bottom {
         padding-left: 10px;
 
         span {
@@ -156,5 +176,33 @@
         margin-left: 50px;
         margin-right: 50px;
         padding: 10px;
+    }
+
+    .action-comment-right {
+        position: relative;
+        margin-left: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        :hover {
+            cursor: pointer;
+        }
+    }
+
+    .menu-comment {
+        position: absolute;
+        top: 50px;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        padding: 10px;
+        width: 200px;
+        height: 100px;
+
+        span {
+            font-weight: 600;
+        }
     }
 </style>

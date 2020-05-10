@@ -32,28 +32,41 @@ export const removePostAction = async ({commit}, postId) => {
     commit('REMOVE_POST', postId);
 };
 
-export const updateUserStatusPost = async ({commit, state}, {postId, userStatus}) => {
-    let post = state.posts.find(it => it.post_id === postId);
-    post.user_status = userStatus;
-    if (Constant.USER_STATUS.LIKE === userStatus) {
+export const updateUserStatusPostAction = async ({commit, state}, userPost) => {
+    let response = await PostService.updateUserStatus(userPost);
+    let userPostResponse = response.data;
+
+    let post = state.posts.find(it => it.post_id === userPostResponse.post_id);
+    post.user_status = userPostResponse.user_status;
+    if (Constant.USER_STATUS.LIKE === userPostResponse.user_status) {
         post.number_like++;
     } else {
         post.number_like--;
     }
-    commit('UPDATE_POST', {postId: postId, post: post});
+    commit('UPDATE_POST', {postId: userPost.post_id, post: post});
 };
 
-export const addComment = async ({commit, state}, {postId, comment}) => {
-    let post = state.posts.find(it => it.post_id === postId);
-    post.comments.push(comment);
+export const addCommentAction = async ({commit, state}, comment) => {
+    let response = await CommentService.sendComment(comment);
+    let commentResponse = response.data;
+
+    let post = state.posts.find(it => it.post_id === commentResponse.post_id);
+    post.comments.push(commentResponse);
     post.number_comment++;
-    commit('UPDATE_POST', {postId: postId, post: post});
+    commit('UPDATE_POST', {postId: comment.post_id, post: post});
 };
 
-export const addChildComment = async ({commit, state}, {postId, parentId, comment}) => {
-    let post = state.posts.find(it => it.post_id === postId);
-    let parentComment = post.comments.find(item => item.comment_id === parentId);
-    parentComment.child_comments.push(comment);
+export const addChildCommentAction = async ({commit, state}, comment) => {
+    let response = await CommentService.sendComment(comment);
+    let commentResponse = response.data;
+
+    let post = state.posts.find(it => it.post_id === commentResponse.post_id);
+    let parentComment = post.comments.find(item => item.comment_id === commentResponse.parent_id);
+    parentComment.child_comments.push(commentResponse);
     post.number_comment++;
-    commit('UPDATE_POST', {postId: postId, post: post});
+    commit('UPDATE_POST', {postId: commentResponse.parent_id, post: post});
+}
+
+export const deleteCommentAction = async ({commit, state}, {postId, commentId}) => {
+    await CommentService.deleteComment(commentId);
 }

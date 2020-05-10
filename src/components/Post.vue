@@ -130,31 +130,21 @@
             },
             sendComment: async function () {
                 if (this.valueComment.length > 0) {
-                    let response = await CommentService.sendComment({
+                    await this.$store.dispatch('addCommentAction', {
                         'post_id': this.$props.post.post_id,
                         'user_owner_id': this.$props.post.user_owner.user_id,
                         'content': this.valueComment
-                    });
-
-                    let comment = response.data;
-                    await this.$store.dispatch('addComment', {
-                        postId: comment.post_id,
-                        comment: comment
                     });
                     this.valueComment = '';
                 }
             },
             updateUserStatus: async function () {
                 let userStatus = this.$props.post.user_status === 'like' ? 'normal' : 'like';
-                let response = await PostService.updateUserStatus({
+
+                await this.$store.dispatch('updateUserStatusPostAction', {
                     'user_id': this.$store.state.user.user_id,
                     'post_id': this.$props.post.post_id,
                     'user_status': userStatus
-                });
-
-                await this.$store.dispatch('updateUserStatusPost', {
-                    postId: response.data.post_id,
-                    userStatus: response.data.user_status
                 });
             },
             confirmDeletePostDialog: function () {
