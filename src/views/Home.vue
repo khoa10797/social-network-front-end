@@ -23,7 +23,7 @@
         <b-modal :active.sync="showAddPostModal" :width="500" scroll="keep">
             <div class="custom-modal custom-card">
                 <div class="card-header justify-content-center">
-                    <h1> Tạo bài viết</h1>
+                    <h1>Tạo bài viết</h1>
                 </div>
                 <div class="card-content">
                     <div class="is-flex">

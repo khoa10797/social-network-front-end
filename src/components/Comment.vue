@@ -81,16 +81,22 @@
             }
         },
         methods: {
-            sendChildComment: function () {
+            sendChildComment: async function () {
                 if (this.valueReplyComment.length > 0) {
-                    CommentService.sendComment({
+                    let response = await CommentService.sendComment({
                         'post_id': this.$props.comment.post_id,
                         'user_owner_id': this.$props.comment.user_owner.user_id,
                         'parent_id': this.$props.comment.comment_id,
                         'content': this.valueReplyComment
-                    }).then(response => {
-                        this.valueReplyComment = '';
                     });
+
+                    let comment = response.data;
+                    await this.$store.dispatch('addChildComment', {
+                        postId: comment.post_id,
+                        parentId: comment.parent_id,
+                        comment: comment
+                    });
+                    this.valueReplyComment = '';
                 }
             },
             openInputComment: function () {

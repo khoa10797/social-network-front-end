@@ -130,10 +130,16 @@
             },
             sendComment: async function () {
                 if (this.valueComment.length > 0) {
-                    await CommentService.sendComment({
+                    let response = await CommentService.sendComment({
                         'post_id': this.$props.post.post_id,
                         'user_owner_id': this.$props.post.user_owner.user_id,
                         'content': this.valueComment
+                    });
+
+                    let comment = response.data;
+                    await this.$store.dispatch('addComment', {
+                        postId: comment.post_id,
+                        comment: comment
                     });
                     this.valueComment = '';
                 }
@@ -173,7 +179,6 @@
         computed: {
             comments() {
                 let post = this.$store.state.posts.find(it => it.post_id === this.post.post_id);
-                console.log( post.comments)
                 return post ? post.comments : [];
             },
             styleBtnLikePost() {

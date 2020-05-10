@@ -33,16 +33,27 @@ export const removePostAction = async ({commit}, postId) => {
 };
 
 export const updateUserStatusPost = async ({commit, state}, {postId, userStatus}) => {
-    console.log(postId);
-    console.log(userStatus);
-    console.log(state.posts)
     let post = state.posts.find(it => it.post_id === postId);
-    console.log(post)
     post.user_status = userStatus;
     if (Constant.USER_STATUS.LIKE === userStatus) {
         post.number_like++;
     } else {
         post.number_like--;
     }
+    commit('UPDATE_POST', {postId: postId, post: post});
+};
+
+export const addComment = async ({commit, state}, {postId, comment}) => {
+    let post = state.posts.find(it => it.post_id === postId);
+    post.comments.push(comment);
+    post.number_comment++;
+    commit('UPDATE_POST', {postId: postId, post: post});
+};
+
+export const addChildComment = async ({commit, state}, {postId, parentId, comment}) => {
+    let post = state.posts.find(it => it.post_id === postId);
+    let parentComment = post.comments.find(item => item.comment_id === parentId);
+    parentComment.child_comments.push(comment);
+    post.number_comment++;
     commit('UPDATE_POST', {postId: postId, post: post});
 }
