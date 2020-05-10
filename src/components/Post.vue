@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <div class="container-comment">
+        <div v-if="showInputComment" class="container-comment">
             <div class="input-comment is-flex">
                 <div class="mr-10">
                     <figure class="image is-40x40">
@@ -119,12 +119,14 @@
         data() {
             return {
                 valueComment: '',
-                showMenuPost: false
+                showMenuPost: false,
+                showInputComment: false
             }
         },
         methods: {
             loadComment: async function () {
                 await this.$store.dispatch('getCommentByPostIdAction', this.post.post_id);
+                this.showInputComment = true;
             },
             sendComment: async function () {
                 if (this.valueComment.length > 0) {

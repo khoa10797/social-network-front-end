@@ -62,6 +62,9 @@ export const addChildCommentAction = async ({commit, state}, comment) => {
 
     let post = state.posts.find(it => it.post_id === commentResponse.post_id);
     let parentComment = post.comments.find(item => item.comment_id === commentResponse.parent_id);
+    if (parentComment.child_comments === undefined || parentComment.child_comments === null) {
+        parentComment.child_comments = [];
+    }
     parentComment.child_comments.push(commentResponse);
     post.number_comment++;
     commit('UPDATE_POST', {postId: commentResponse.post_id, post: post});
