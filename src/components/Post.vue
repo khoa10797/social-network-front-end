@@ -19,7 +19,8 @@
 
         <div class="post-top">
             <div class="post-header">
-                <PostUserInfo :avatar="post.user_owner.avatar" :user-name="post.user_owner.name" :time="post.created_at"/>
+                <PostUserInfo :avatar="post.user_owner.avatar" :user-name="post.user_owner.name"
+                              :time="post.created_at"/>
                 <div class="btn-menu-post" @click="showMenuPost = !showMenuPost">
                     <div>
                         <i class="fas fa-ellipsis-h"></i>
@@ -138,13 +139,17 @@
                 }
             },
             updateUserStatus: async function () {
-                let userStatus = this.$props.post.user_status === 'like' ? 'dislike' : 'like';
+                let userStatus = this.$props.post.user_status === 'like' ? 'normal' : 'like';
                 let response = await PostService.updateUserStatus({
                     'user_id': this.$store.state.user.user_id,
                     'post_id': this.$props.post.post_id,
                     'user_status': userStatus
                 });
-                this.$store.state.posts.find(it => it.post_id === this.$props.post.post_id).user_status = response.data.user_status;
+
+                await this.$store.dispatch('updateUserStatusPost', {
+                    postId: response.data.post_id,
+                    userStatus: response.data.user_status
+                });
             },
             confirmDeletePostDialog: function () {
                 this.showMenuPost = false;
@@ -168,6 +173,7 @@
         computed: {
             comments() {
                 let post = this.$store.state.posts.find(it => it.post_id === this.post.post_id);
+                console.log( post.comments)
                 return post ? post.comments : [];
             },
             styleBtnLikePost() {

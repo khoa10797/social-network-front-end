@@ -20,3 +20,8 @@ export const ADD_POST = (state, post) => {
 export const REMOVE_POST = (state, postId) => {
     state.posts = state.posts.filter(item => item.post_id !== postId);
 };
+
+export const UPDATE_POST = (state, {postId, post}) => {
+    let postIndex = state.posts.findIndex(item => item.post_id === postId);
+    state.posts[postIndex] = post;
+};
