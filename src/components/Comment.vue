@@ -30,7 +30,7 @@
                         <div v-if="showMenuComment" class="menu-comment">
                             <ul class="menu-list">
                                 <li>
-                                    <a @click="deleteComment"><span>Xóa bài</span></a>
+                                    <a @click="deleteComment"><span>Xóa bình luận</span></a>
                                 </li>
                                 <li>
                                     <a><span>Chỉnh sửa</span></a>
@@ -78,7 +78,6 @@
 </template>
 
 <script>
-    import * as CommentService from '../services/comment_service';
     import ResizableInput from "./ResizableInput";
 
     export default {
@@ -115,7 +114,18 @@
                 this.showInputComment = true;
             },
             deleteComment: async function () {
-
+                if (this.comment.parent_id !== undefined && this.comment.parent_id !== null) {
+                    await this.$store.dispatch('removeChildCommentAction', {
+                        postId: this.comment.post_id,
+                        parentId: this.comment.parent_id,
+                        commentId: this.comment.comment_id
+                    });
+                } else {
+                    await this.$store.dispatch('removeCommentAction', {
+                        postId: this.comment.post_id,
+                        commentId: this.comment.comment_id
+                    });
+                }
             }
         }
     }

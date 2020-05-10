@@ -98,8 +98,6 @@
 </template>
 
 <script>
-    import * as CommentService from '../services/comment_service';
-    import * as PostService from '../services/post_service';
     import PostUserInfo from "./PostUserInfo";
     import ImageGrid from "./ImageGrid";
     import PostContent from "./PostContent";

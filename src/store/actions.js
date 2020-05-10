@@ -64,9 +64,34 @@ export const addChildCommentAction = async ({commit, state}, comment) => {
     let parentComment = post.comments.find(item => item.comment_id === commentResponse.parent_id);
     parentComment.child_comments.push(commentResponse);
     post.number_comment++;
-    commit('UPDATE_POST', {postId: commentResponse.parent_id, post: post});
+    commit('UPDATE_POST', {postId: commentResponse.post_id, post: post});
 }
 
-export const deleteCommentAction = async ({commit, state}, {postId, commentId}) => {
+export const removeCommentAction = async ({commit, state}, {postId, commentId}) => {
     await CommentService.deleteComment(commentId);
+
+    let post = state.posts.find(it => it.post_id === postId);
+    let comment = post.comments.find(item => item.comment_id === commentId);
+
+    let numberChildComment = 0;
+    if (comment.child_comments !== null && comment.child_comments !== undefined) {
+        numberChildComment = comment.child_comments.length;
+    }
+
+    post.comments = post.comments.filter(item => item.comment_id !== commentId);
+    post.number_comment -= (numberChildComment + 1);
+    commit('UPDATE_POST', {postId: postId, post: post});
+}
+
+export const removeChildCommentAction = async ({commit, state}, {postId, parentId, commentId}) => {
+    await CommentService.deleteComment(commentId);
+
+    let post = state.posts.find(it => it.post_id === postId);
+    let parentCommentIndex = post.comments.findIndex(item => item.comment_id === parentId);
+    let parentComment = post.comments[parentCommentIndex];
+
+    parentComment.child_comments = parentComment.child_comments.filter(item => item.comment_id !== commentId);
+    post.comments[parentCommentIndex] = parentComment;
+    post.number_comment--;
+    commit('UPDATE_POST', {postId: postId, post: post});
 }
