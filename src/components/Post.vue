@@ -28,7 +28,9 @@
                 </div>
             </div>
 
-            <PostContent :content="post.content"/>
+            <div v-html="postContent" class="post-content has-text-black">
+
+            </div>
         </div>
 
         <ImageGrid :images="post.images"/>
@@ -100,7 +102,6 @@
 <script>
     import PostUserInfo from "./PostUserInfo";
     import ImageGrid from "./ImageGrid";
-    import PostContent from "./PostContent";
     import Comment from "./Comment";
     import ResizableInput from "./ResizableInput";
 
@@ -109,7 +110,6 @@
         components: {
             PostUserInfo,
             ImageGrid,
-            PostContent,
             Comment,
             ResizableInput
         },
@@ -120,7 +120,8 @@
             return {
                 valueComment: '',
                 showMenuPost: false,
-                showInputComment: false
+                showInputComment: false,
+                postContent: ''
             }
         },
         methods: {
@@ -157,11 +158,25 @@
                     type: 'is-danger',
                     hasIcon: true,
                     onConfirm: () => {
-                        this.$store.dispatch('removePostAction', this.post.post_id);
-                        this.$buefy.toast.open({
-                            message: 'Xóa bài thành công!',
-                            type: 'is-success'
-                        });
+                        this.$store.dispatch('removePostAction', this.post.post_id).then(result => {
+                            this.$buefy.toast.open({
+                                message: 'Xóa bài thành công!',
+                                type: 'is-success'
+                            });
+                        }).catch(error => {
+                            console.log(error)
+                            if (error.code === 500) {
+                                this.$buefy.toast.open({
+                                    message: 'Có lỗi xảy ra!',
+                                    type: 'is-danger'
+                                });
+                            } else {
+                                this.$buefy.toast.open({
+                                    message: error.message,
+                                    type: 'is-danger'
+                                });
+                            }
+                        })
                     }
                 })
             }
@@ -174,6 +189,9 @@
             styleBtnLikePost() {
                 return this.post.user_status === 'like' ? {color: "#2078F4"} : {}
             }
+        },
+        mounted() {
+            this.postContent = this.post.content;
         }
     };
 </script>
@@ -228,6 +246,10 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    .post-content {
+        padding: 10px;
     }
 
     .btn-menu-post {

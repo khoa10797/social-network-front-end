@@ -41,19 +41,19 @@
                     </div>
 
                     <div class="field">
-                        <div class="control">
+                        <!--<div class="control">
                                 <textarea class="textarea textarea-none-border"
                                           placeholder="Bạn đang nghĩ gì thế?"
                                           v-model="postContent">
                                 </textarea>
-                        </div>
+                        </div>-->
+
+                        <PostEditor :editor="editor"/>
                     </div>
 
                     <div class="image-upload">
                         <input id="fileInput" type="file" @change="previewImage" accept="image/*"></input>
-                        <!--                                                <div v-if="imageData != null">-->
-                        <!--                                                    <img class="preview" :src="imageUrl" alt="">-->
-                        <!--                                                </div>-->
+
                         <div class="preview-image">
                             <div v-if="imagePreviewUrl != null" class="btn-remove-image" @click="removeImage">
                                 <i class="fas fa-times"></i>
@@ -99,10 +99,31 @@
     import Post from "../components/Post";
     import firebase from "firebase";
     import {Constant} from "../commons/constant"
+    import PostEditor from "../components/PostEditor";
+    import {Editor} from "tiptap";
+    import {
+        Blockquote,
+        Bold,
+        BulletList,
+        Code,
+        CodeBlock,
+        HardBreak,
+        Heading,
+        History,
+        Italic,
+        Link,
+        ListItem,
+        OrderedList,
+        Strike,
+        TodoItem,
+        TodoList,
+        Underline
+    } from "tiptap-extensions";
 
     export default {
         name: "Home",
         components: {
+            PostEditor,
             Navbar,
             Post
         },
@@ -113,7 +134,32 @@
                 imageData: null,
                 imageName: '',
                 imagePreviewUrl: null,
-                DEFAULT_AVATAR: Constant.DEFAULT_AVATAR
+                DEFAULT_AVATAR: Constant.DEFAULT_AVATAR,
+                editor: new Editor({
+                    extensions: [
+                        new Blockquote(),
+                        new BulletList(),
+                        new CodeBlock(),
+                        new HardBreak(),
+                        new Heading({levels: [1, 2, 3]}),
+                        new ListItem(),
+                        new OrderedList(),
+                        new TodoItem(),
+                        new TodoList(),
+                        new Link(),
+                        new Bold(),
+                        new Code(),
+                        new Italic(),
+                        new Strike(),
+                        new Underline(),
+                        new History(),
+                    ],
+                    content: '',
+                    onUpdate: ({getJSON, getHTML}) => {
+                        /*this.json = getJSON()*/
+                        this.postContent = getHTML()
+                    },
+                }),
             }
         },
         computed: {
