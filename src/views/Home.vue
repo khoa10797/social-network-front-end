@@ -41,14 +41,7 @@
                     </div>
 
                     <div class="field">
-                        <!--<div class="control">
-                                <textarea class="textarea textarea-none-border"
-                                          placeholder="Bạn đang nghĩ gì thế?"
-                                          v-model="postContent">
-                                </textarea>
-                        </div>-->
-
-                        <PostEditor :editor="editor"/>
+                        <ckeditor :editor="editor" v-model="postContent" :config="editorConfig"/>
                     </div>
 
                     <div class="image-upload">
@@ -98,34 +91,17 @@
     import Navbar from "../components/Navbar";
     import Post from "../components/Post";
     import firebase from "firebase";
-    import {Constant} from "../commons/constant"
-    import PostEditor from "../components/PostEditor";
-    import {Editor} from "tiptap";
-    import {
-        Blockquote,
-        Bold,
-        BulletList,
-        Code,
-        CodeBlock,
-        HardBreak,
-        Heading,
-        History,
-        Italic,
-        Link,
-        ListItem,
-        OrderedList,
-        Strike,
-        TodoItem,
-        TodoList,
-        Underline
-    } from "tiptap-extensions";
+    import {Constant} from "../commons/constant";
+    import CKEditor from "@ckeditor/ckeditor5-vue";
+    import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
 
     export default {
         name: "Home",
         components: {
-            PostEditor,
             Navbar,
-            Post
+            Post,
+            'ckeditor': CKEditor.component,
+            BalloonEditor
         },
         data() {
             return {
@@ -135,30 +111,10 @@
                 imageName: '',
                 imagePreviewUrl: null,
                 DEFAULT_AVATAR: Constant.DEFAULT_AVATAR,
-                editor: new Editor({
-                    extensions: [
-                        new Blockquote(),
-                        new BulletList(),
-                        new CodeBlock(),
-                        new HardBreak(),
-                        new Heading({levels: [1, 2, 3]}),
-                        new ListItem(),
-                        new OrderedList(),
-                        new TodoItem(),
-                        new TodoList(),
-                        new Link(),
-                        new Bold(),
-                        new Code(),
-                        new Italic(),
-                        new Strike(),
-                        new Underline(),
-                        new History(),
-                    ],
-                    content: '',
-                    onUpdate: ({getJSON, getHTML}) => {
-                        this.postContent = getHTML()
-                    },
-                }),
+                editor: BalloonEditor,
+                editorConfig: {
+                    placeholder: 'Bạn đang nghĩ gì...'
+                }
             }
         },
         computed: {
@@ -282,6 +238,13 @@
         .field {
             margin-top: 10px;
             margin-bottom: 20px;
+
+
+            .ck-blurred {
+                border: none !important;
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
+            }
         }
 
         .button {

@@ -7,14 +7,15 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-balloon": "^19.0.0",
+    "@ckeditor/ckeditor5-build-classic": "^19.0.0",
+    "@ckeditor/ckeditor5-vue": "^1.0.1",
     "axios": "^0.19.2",
     "buefy": "^0.8.15",
     "core-js": "^3.6.4",
     "firebase": "^7.13.2",
     "moment": "^2.24.0",
     "sockjs-client": "^1.4.0",
-    "tiptap": "^1.27.1",
-    "tiptap-extensions": "^1.29.1",
     "vue": "^2.6.11",
     "vue-moment": "^4.1.0",
     "vue-router": "^3.1.5",
