@@ -20,7 +20,7 @@
             <Post v-for="post in posts" :key="post.post_id" :post="post"/>
         </div>
 
-        <b-modal :active.sync="showAddPostModal" :width="500" scroll="keep">
+        <b-modal :active.sync="showAddPostModal" :width="600" scroll="keep">
             <div class="custom-modal custom-card">
                 <div class="card-header justify-content-center">
                     <h1>Tạo bài viết</h1>
@@ -156,7 +156,6 @@
                     ],
                     content: '',
                     onUpdate: ({getJSON, getHTML}) => {
-                        /*this.json = getJSON()*/
                         this.postContent = getHTML()
                     },
                 }),

@@ -42,7 +42,7 @@
             </div>
         </editor-menu-bubble>
 
-        <editor-content class="editor__content" :editor="editor"/>
+        <editor-content class="editor__content" :autofocus="true" :editor="editor"/>
     </div>
 </template>
 
@@ -60,18 +60,8 @@
         },
         data() {
             return {
-                keepInBounds: true,
-                json: '',
-                html: ''
+                keepInBounds: true
             }
-        },
-        methods: {
-            getHtml: function () {
-                return this.html;
-            }
-        },
-        beforeDestroy() {
-            this.editor.destroy()
         }
     }
 </script>
@@ -162,7 +152,6 @@
 
     .editor {
         position: relative;
-        max-width: 30rem;
         margin: 0 auto 5rem
     }
 
