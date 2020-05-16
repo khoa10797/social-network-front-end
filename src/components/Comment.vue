@@ -38,11 +38,17 @@
                             </ul>
                         </div>
                     </div>
+
+                    <div v-if="comment.number_like !== undefined && comment.number_like > 0"
+                         class="status-user-comment">
+                        <img src="../assets/icons/icon-like.svg" alt=""/>
+                        <span>{{comment.number_like}}</span>
+                    </div>
                 </div>
 
                 <div class="action-comment-bottom">
-                    <span>Thích</span>
-                    <span @click="openInputComment()">Trả lời</span>
+                    <span @click="updateUserStatus">Thích</span>
+                    <span @click="openInputComment">Trả lời</span>
                 </div>
             </div>
         </div>
@@ -126,6 +132,19 @@
                         commentId: this.comment.comment_id
                     });
                 }
+            },
+            updateUserStatus: async function () {
+                let userStatus = this.comment.user_status === 'like' ? 'normal' : 'like';
+
+                await this.$store.dispatch('updateUserStatusCommentAction', {
+                    postId: this.comment.post_id,
+                    parentId: this.comment.parent_id,
+                    userComment: {
+                        'user_id': this.$store.state.user.user_id,
+                        'comment_id': this.comment.comment_id,
+                        'user_status': userStatus
+                    }
+                })
             }
         }
     }
@@ -213,6 +232,33 @@
 
         span {
             font-weight: 600;
+        }
+    }
+
+    .status-user-comment {
+        position: absolute;
+        bottom: -10px;
+        right: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 0 2px;
+
+        img {
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+
+        :hover {
+            cursor: pointer;
+        }
+
+        span {
+            font-size: 14px;
         }
     }
 </style>

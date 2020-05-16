@@ -98,3 +98,39 @@ export const removeChildCommentAction = async ({commit, state}, {postId, parentI
     post.number_comment--;
     commit('UPDATE_POST', {postId: postId, post: post});
 }
+
+export const updateUserStatusCommentAction = async ({commit, state}, {postId, parentId, userComment}) => {
+    let response = await CommentService.updateUserStatus(userComment);
+    let userCommentResponse = response.data;
+
+    let post = state.posts.find(it => it.post_id === postId);
+    if (parentId !== undefined && parentId !== null) {
+        let parentCommentIndex = post.comments.findIndex(item => item.comment_id === parentId);
+        let parentComment = post.comments[parentCommentIndex];
+        let commentIndex = parentComment.child_comments.findIndex(item => item.comment_id === userComment.comment_id);
+        let comment = parentComment.child_comments[commentIndex];
+        comment.user_status = userCommentResponse.user_status;
+
+        if (Constant.USER_STATUS.LIKE === userCommentResponse.user_status) {
+            comment.number_like++;
+        } else {
+            comment.number_like--;
+        }
+
+        parentComment[commentIndex] = comment;
+        post.comments[parentCommentIndex] = parentComment;
+    } else {
+        let commentIndex = post.comments.findIndex(item => item.comment_id === userComment.comment_id);
+        let comment = post.comments[commentIndex];
+        comment.user_status = userCommentResponse.user_status;
+        if (Constant.USER_STATUS.LIKE === userCommentResponse.user_status) {
+            comment.number_like++;
+        } else {
+            comment.number_like--;
+        }
+
+        post.comments[commentIndex] = comment;
+    }
+
+    commit('UPDATE_POST', {postId: postId, post: post});
+};

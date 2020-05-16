@@ -164,17 +164,25 @@
                                 type: 'is-success'
                             });
                         }).catch(error => {
-                            console.log(error)
-                            if (error.code === 500) {
-                                this.$buefy.toast.open({
-                                    message: 'Có lỗi xảy ra!',
-                                    type: 'is-danger'
-                                });
-                            } else {
-                                this.$buefy.toast.open({
-                                    message: error.message,
-                                    type: 'is-danger'
-                                });
+                            console.log(error);
+                            switch (error.status) {
+                                case 500:
+                                    this.$buefy.toast.open({
+                                        message: 'Có lỗi xảy ra!',
+                                        type: 'is-danger'
+                                    });
+                                    return
+                                case 401:
+                                    this.$buefy.toast.open({
+                                        message: 'Bạn không có quyền thực hiện chức năng này!',
+                                        type: 'is-danger'
+                                    });
+                                    return;
+                                default:
+                                    this.$buefy.toast.open({
+                                        message: error.message,
+                                        type: 'is-danger'
+                                    });
                             }
                         })
                     }

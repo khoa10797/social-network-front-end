@@ -16,9 +16,8 @@ baseRequest.interceptors.request.use(request => {
     return Promise.reject(error);
 });
 
-/*
 baseRequest.interceptors.response.use(response => {
     return response;
 }, error => {
     return Promise.reject(error.response);
-});*/
+});

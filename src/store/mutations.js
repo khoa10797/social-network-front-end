@@ -14,7 +14,7 @@ export const SET_COMMENTS_BY_POST_ID = (state, {postId, comments}) => {
 };
 
 export const ADD_POST = (state, post) => {
-    state.posts.push(post);
+    state.posts.unshift(post);
 };
 
 export const REMOVE_POST = (state, postId) => {
