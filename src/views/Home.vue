@@ -196,7 +196,7 @@
 <style lang="scss" scoped>
     .container-list-post {
         margin-top: 30px;
-        max-width: 640px;
+        max-width: 680px;
     }
 
     .card-header-post {

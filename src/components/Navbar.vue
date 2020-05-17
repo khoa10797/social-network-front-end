@@ -35,7 +35,7 @@
         name: "Navbar",
         computed: {
             user() {
-                return this.$store.state.user;
+                return JSON.parse(localStorage.getItem('user'));
             },
             userFirstName() {
                 let s = this.user.name.split(' ');

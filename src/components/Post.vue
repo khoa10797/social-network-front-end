@@ -19,8 +19,7 @@
 
         <div class="post-top">
             <div class="post-header">
-                <PostUserInfo :avatar="post.user_owner.avatar" :user-name="post.user_owner.name"
-                              :time="post.created_at"/>
+                <PostUserInfo :user="post.user_owner" :time="post.created_at"/>
                 <div class="btn-menu-post" @click="showMenuPost = !showMenuPost">
                     <div>
                         <i class="fas fa-ellipsis-h"></i>

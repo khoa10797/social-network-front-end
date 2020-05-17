@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from "../views/Login";
+import User from "../views/User";
 
 Vue.use(VueRouter);
 
@@ -16,7 +17,12 @@ const routes = [
         name: 'Login',
         component: Login
     },
-
+    {
+        path: '/user',
+        name: 'User',
+        component: User,
+        props: (route) => ({query: route.query})
+    },
     {path: '*', redirect: '/'}
 ];
 
