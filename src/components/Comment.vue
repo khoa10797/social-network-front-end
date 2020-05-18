@@ -3,7 +3,7 @@
         <div class="parent-comment">
             <div class="card-image mr-10">
                 <figure class="image is-40x40">
-                    <router-link to="/">
+                    <router-link :to="{path: 'user', query: {userId: comment.user_owner.user_id}}">
                         <img class="is-rounded" :src="comment.user_owner.avatar" alt=""/>
                     </router-link>
                 </figure>
@@ -12,7 +12,7 @@
             <div class="right-parent-comment">
                 <div class="container-comment-content">
                     <div class="comment-content">
-                        <router-link to="/">
+                        <router-link :to="{path: 'user', query: {userId: comment.user_owner.user_id}}">
                             <p class="has-text-black is-text-decoration-line">
                                 <b>{{comment.user_owner.name}}</b>
                             </p>

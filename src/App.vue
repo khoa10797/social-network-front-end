@@ -83,4 +83,8 @@
     .modal-card-foot {
         background-color: #ffffff !important;
     }
+
+    .card {
+        border-radius: 10px;
+    }
 </style>

@@ -65,7 +65,7 @@
                     if (response.status_code === 200) {
                         localStorage.setItem('access_token', response.data.access_token);
                         localStorage.setItem('user', JSON.stringify(response.data.user))
-                        window.location.href = "/";
+                        await this.$router.push({path: '/'})
                     }
                 } catch (ex) {
                     this.$buefy.toast.open({

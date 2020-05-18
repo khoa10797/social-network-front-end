@@ -1,23 +1,26 @@
 <template>
     <div>
         <Navbar/>
-        <div class="container container-list-post">
-            <div class="custom-card card-header-post">
-                <div>
-                    <figure class="image is-40x40">
-                        <router-link to="/">
-                            <img v-if="user != null" class="is-rounded" :src="user.avatar" alt=""/>
-                            <img v-else class="is-rounded" :src="DEFAULT_AVATAR" alt="DEFAULT_AVATAR"/>
-                        </router-link>
-                    </figure>
-                </div>
-                <div class="input-card-header-post">
-                    <input @click="showAddPostModal = true" class="input is-rounded" type="text"
-                           placeholder="Bạn đang nghĩ gì..." readonly>
-                </div>
-            </div>
 
-            <Post v-for="post in posts" :key="post.post_id" :post="post"/>
+        <div class="columns is-mobile">
+            <div class="container container-list-post">
+                <div class="custom-card card-header-post">
+                    <div>
+                        <figure class="image is-40x40">
+                            <router-link to="/">
+                                <img v-if="user != null" class="is-rounded" :src="user.avatar" alt=""/>
+                                <img v-else class="is-rounded" :src="DEFAULT_AVATAR" alt="DEFAULT_AVATAR"/>
+                            </router-link>
+                        </figure>
+                    </div>
+                    <div class="input-card-header-post">
+                        <input @click="showAddPostModal = true" class="input is-rounded" type="text"
+                               placeholder="Bạn đang nghĩ gì..." readonly>
+                    </div>
+                </div>
+
+                <Post v-for="post in posts" :key="post.post_id" :post="post"/>
+            </div>
         </div>
 
         <b-modal :active.sync="showAddPostModal" :width="600" scroll="keep">
@@ -84,6 +87,7 @@
                 </div>
             </div>
         </b-modal>
+
     </div>
 </template>
 
@@ -308,6 +312,31 @@
 
         :hover {
             cursor: pointer;
+        }
+    }
+
+    .menu-list {
+        .custom-menu-item {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            border-radius: 10px;
+            padding: 0 10px;
+
+            span {
+                font-weight: 500;
+            }
+        }
+
+        li {
+            > div {
+                height: 50px;
+
+                :hover {
+                    cursor: pointer;
+                    background-color: #e4e6eb;
+                }
+            }
         }
     }
 </style>
