@@ -1,9 +1,31 @@
 <template>
     <div>
         <Navbar/>
+        <div class="container container-list-post">
+            <div class="menu-topic">
+                <ul class="menu-list">
+                    <li>
+                        <div>
+                            <router-link :to="{path: 'topic', query: {topicId: 1}}">
+                                <div class="custom-menu-item">
+                                    <span>Công nghệ thông tin</span>
+                                </div>
+                            </router-link>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <router-link :to="{path: 'topic', query: {topicId: 2}}">
+                                <div class="custom-menu-item">
+                                    <span>Khoa học</span>
+                                </div>
+                            </router-link>
+                        </div>
+                    </li>
+                </ul>
+            </div>
 
-        <div class="columns is-mobile">
-            <div class="container container-list-post">
+            <div>
                 <div class="custom-card card-header-post">
                     <div>
                         <figure class="image is-40x40">
@@ -315,27 +337,38 @@
         }
     }
 
-    .menu-list {
-        .custom-menu-item {
-            display: flex;
-            align-items: center;
-            height: 100%;
-            border-radius: 10px;
-            padding: 0 10px;
+    .menu-topic {
+        position: absolute;
+        left: -200px;
 
-            span {
-                font-weight: 500;
-            }
-        }
+        .menu-list {
+            .custom-menu-item {
+                display: flex;
+                align-items: center;
+                height: 100%;
+                border-radius: 10px;
+                padding: 0 10px;
 
-        li {
-            > div {
-                height: 50px;
-
-                :hover {
-                    cursor: pointer;
-                    background-color: #e4e6eb;
+                span {
+                    font-weight: 500;
                 }
+            }
+
+            li {
+                > div {
+                    height: 50px;
+
+                    :hover {
+                        cursor: pointer;
+                        background-color: #e4e6eb;
+                    }
+                }
+            }
+
+            a {
+                padding: unset;
+                height: 100%;
+                border-radius: 10px;
             }
         }
     }

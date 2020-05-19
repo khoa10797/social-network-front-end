@@ -36,7 +36,6 @@
 
             <div class="card">
                 <div v-if="activeTab === 0">
-                    <!--<h1 class="title is-1">Dòng thời gian</h1>-->
                     <Post v-for="post in posts" :key="post.post_id" :post="post"/>
                 </div>
 
