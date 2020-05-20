@@ -1,6 +1,7 @@
 import * as UserService from '../services/user_service';
 import * as PostService from '../services/post_service';
 import * as CommentService from '../services/comment_service';
+import * as TopicService from '../services/topic_service';
 import {Constant} from "../commons/constant";
 
 export const setUserAction = async ({commit}, user) => {
@@ -9,12 +10,12 @@ export const setUserAction = async ({commit}, user) => {
 
 export const getPostByUserIdAction = async ({commit}, userId) => {
     let response = await PostService.getByUser(userId);
-    commit('SET_POSTS_BY_USER_ID', response.data);
+    commit('SET_POSTS', response.data);
 };
 
 export const getTrendingPostAction = async ({commit}) => {
     let response = await PostService.getTrendingPost();
-    commit('SET_POSTS_BY_USER_ID', response.data);
+    commit('SET_POSTS', response.data);
 };
 
 export const getCommentByPostIdAction = async ({commit}, postId) => {
@@ -133,4 +134,9 @@ export const updateUserStatusCommentAction = async ({commit, state}, {postId, pa
     }
 
     commit('UPDATE_POST', {postId: postId, post: post});
+};
+
+export const getPostByTopicIdAction = async ({commit}, topicId) => {
+    let response = await PostService.getByTopicId(topicId);
+    commit('SET_POSTS', response.data);
 };

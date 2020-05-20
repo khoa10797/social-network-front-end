@@ -1,11 +1,10 @@
 import Vue from 'vue';
-import state from "./state";
 
 export const SET_USER = (state, user) => {
     state.user = user;
 };
 
-export const SET_POSTS_BY_USER_ID = (state, posts) => {
+export const SET_POSTS = (state, posts) => {
     state.posts = posts;
 };
 

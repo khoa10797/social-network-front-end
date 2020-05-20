@@ -42,3 +42,8 @@ export const getTrendingPost = async () => {
     let response = await baseRequest.get('/post/trending');
     return response.data;
 };
+
+export const getByTopicId = async (topicId) => {
+    let response = await baseRequest.get(`/post/topic/${topicId}`);
+    return response.data;
+};

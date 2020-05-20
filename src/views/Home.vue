@@ -6,7 +6,7 @@
                 <ul class="menu-list">
                     <li>
                         <div>
-                            <router-link :to="{path: 'topic', query: {topicId: 1}}">
+                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
                                 <div class="custom-menu-item">
                                     <span>Công nghệ thông tin</span>
                                 </div>
@@ -15,7 +15,7 @@
                     </li>
                     <li>
                         <div>
-                            <router-link :to="{path: 'topic', query: {topicId: 2}}">
+                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
                                 <div class="custom-menu-item">
                                     <span>Khoa học</span>
                                 </div>

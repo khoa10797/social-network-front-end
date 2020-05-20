@@ -3,7 +3,7 @@
         <Navbar/>
         <div class="container container-topic">
             <div class="container-header-topic">
-                <div class="background-topic">
+                <div class="background-topic" v-bind:style="{'background-image': `url('${topic.background_image}')`}">
                     <div class="avatar-topic">
                         <figure class="image">
                             <img class="is-rounded" :src="topic.avatar" alt=""/>
@@ -25,9 +25,34 @@
                             <span>100 bài viết</span>
                         </div>
                         <div>
-                            <button class="button is-primary">Theo dõi</button>
+                            <button class="button is-primary">
+                                <span class="icon is-small">
+                                    <i class="fas fa-plus-square"></i>
+                                </span>
+                                <span>Theo dõi</span>
+                            </button>
                         </div>
                     </div>
+
+                    <div class="navbar-menu-topic">
+                        <b-tabs v-model="activeTab">
+                            <b-tab-item label="Bài viết">
+                            </b-tab-item>
+
+                            <b-tab-item label="Người dùng">
+                            </b-tab-item>
+                        </b-tabs>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div v-if="activeTab === 0">
+                    <Post v-for="post in posts" :key="post.post_id" :post="post"/>
+                </div>
+
+                <div v-if="activeTab === 1">
+                    <h1 class="title is-1">Giới thiệu</h1>
                 </div>
             </div>
         </div>
@@ -36,26 +61,42 @@
 
 <script>
     import Navbar from "../components/Navbar";
+    import Post from "../components/Post";
+    import * as TopicService from "../services/topic_service";
 
     export default {
         name: "Topic",
         components: {
-            Navbar
+            Navbar,
+            Post
         },
         props: {
             query: Object
         },
         data() {
             return {
-                topic: {
-                    "topic_id": "5ec3f62112c8d847d47a2acf",
-                    "name": "Công nghệ thông tin",
-                    "intro": "Lĩnh vực công nghệ",
-                    "description": "Nơi tập trung các bài viết liên quan đến công nghệ thông tin và ứng dụng của nó trong đời sống",
-                    "avatar": "https://firebasestorage.googleapis.com/v0/b/social-network-66b92.appspot.com/o/app_images%2Favatar_IT_topic.jpg?alt=media&token=0b4de802-c982-4aa0-9ee9-034424138bc7",
-                    "background_image": "https://firebasestorage.googleapis.com/v0/b/social-network-66b92.appspot.com/o/app_images%2Fbackground_IT_topic.jpg?alt=media&token=b40bb80a-3aa8-4791-9d1b-1fa83f071d39",
-                }
+                activeTab: 0,
+                topic: Object
             }
+        },
+        computed: {
+            posts() {
+                return this.$store.state.posts;
+            }
+        },
+        mounted() {
+            this.getPostByTopic();
+        },
+        methods: {
+            getTopic: async function () {
+                let topicId = this.$props.query.topicId;
+                let response = await TopicService.getById(topicId);
+                this.topic = response.data;
+            },
+            getPostByTopic: async function () {
+                await this.getTopic();
+                await this.$store.dispatch('getPostByTopicIdAction', this.topic.topic_id);
+            },
         }
     }
 </script>
@@ -77,7 +118,6 @@
             height: 300px;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
-            background-image: url("https://firebasestorage.googleapis.com/v0/b/social-network-66b92.appspot.com/o/app_images%2Fbackground_IT_topic.jpg?alt=media&token=b40bb80a-3aa8-4791-9d1b-1fa83f071d39");
             background-position: center center;
             background-size: cover;
             background-repeat: no-repeat;
@@ -121,7 +161,7 @@
     }
 
     .menu-header {
-        margin-top: 10px;
+        margin-top: 20px;
         display: flex;
         align-items: center;
 
@@ -130,6 +170,41 @@
 
             span {
                 font-weight: 500;
+            }
+        }
+    }
+</style>
+
+<style lang="scss">
+    .navbar-menu-topic {
+        margin-top: 20px;
+        border-top: 1px solid #dbdbdb;
+
+        .b-tabs {
+            .tabs {
+                span {
+                    font-weight: 500;
+                }
+            }
+
+            .tab-content {
+                display: none;
+            }
+
+            .is-active {
+                a {
+                    border-bottom-width: 3px;
+                    border-bottom-color: #3273dc;
+                    border-bottom-style: solid;
+                }
+            }
+
+            ul {
+                border: none;
+
+                a {
+                    border: none;
+                }
             }
         }
     }

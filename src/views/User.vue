@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            <div class="card">
+            <div>
                 <div v-if="activeTab === 0">
                     <Post v-for="post in posts" :key="post.post_id" :post="post"/>
                 </div>
