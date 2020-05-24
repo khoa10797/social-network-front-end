@@ -35,13 +35,22 @@
         name: "Navbar",
         computed: {
             user() {
-                return JSON.parse(localStorage.getItem('user'));
+                return this.$store.state.user;
             },
             userFirstName() {
                 let s = this.user.name.split(' ');
                 return s[s.length - 1];
             }
         },
+        mounted() {
+            this.getUser();
+        },
+        methods: {
+            getUser: async function () {
+                let user = localStorage.getItem('user');
+                await this.$store.dispatch('setUserAction', JSON.parse(user));
+            }
+        }
     };
 </script>
 

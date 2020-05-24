@@ -47,9 +47,9 @@
 
                 let date = new Date(this.time);
                 if (date.getFullYear() < currentDate.getFullYear())
-                    return `${date.getDate()} tháng ${date.getMonth()}, ${date.getFullYear()}`;
+                    return `${date.getDate()} tháng ${date.getMonth() + 1}, ${date.getFullYear()}`;
 
-                return `${date.getDate()} tháng ${date.getMonth()} lúc ${date.getHours()}:${date.getMinutes()}`;
+                return `${date.getDate()} tháng ${date.getMonth() + 1} lúc ${date.getHours()}:${date.getMinutes()}`;
             }
         }
     }

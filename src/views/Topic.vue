@@ -21,15 +21,26 @@
                     </div>
 
                     <div class="menu-header">
-                        <div class="total-post">
+                        <div class="topic-info-header">
                             <span>100 bài viết</span>
                         </div>
+                        <div class="topic-info-header">
+                            <span>{{topic.number_follow}} người theo dõi</span>
+                        </div>
                         <div>
-                            <button class="button is-primary">
-                                <span class="icon is-small">
-                                    <i class="fas fa-plus-square"></i>
-                                </span>
-                                <span>Theo dõi</span>
+                            <button class="button is-primary" @click="updateUserStatus">
+                                <div v-if="topic.user_status === 'follow'">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span>Đã theo dõi</span>
+                                </div>
+                                <div v-else>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-plus-square"></i>
+                                    </span>
+                                    <span>Theo dõi</span>
+                                </div>
                             </button>
                         </div>
                     </div>
@@ -97,6 +108,26 @@
                 await this.getTopic();
                 await this.$store.dispatch('getPostByTopicIdAction', this.topic.topic_id);
             },
+            updateUserStatus: async function () {
+                let userStatus = '';
+                let updatedNumberFollow = 0;
+                if (this.topic.user_status === 'follow') {
+                    userStatus = 'unfollow';
+                    updatedNumberFollow = -1;
+                } else {
+                    userStatus = 'follow';
+                    updatedNumberFollow = 1;
+                }
+
+                await TopicService.updateUserStatus({
+                    'user_id': this.$store.state.user.user_id,
+                    'topic_id': this.topic.topic_id,
+                    'user_status': userStatus
+                });
+
+                this.topic.number_follow += updatedNumberFollow;
+                this.topic.user_status = userStatus;
+            }
         }
     }
 </script>
@@ -165,7 +196,7 @@
         display: flex;
         align-items: center;
 
-        .total-post {
+        .topic-info-header {
             margin-right: 20px;
 
             span {
