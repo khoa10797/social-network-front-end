@@ -6,6 +6,11 @@ export const getById = async (topicId) => {
 };
 
 export const updateUserStatus = async (userTopic) => {
-    let response = await baseRequest.put('topic/user_status', userTopic);
+    let response = await baseRequest.put('/topic/user_status', userTopic);
+    return response.data;
+}
+
+export const getFollowerByTopicId = async (topicId) => {
+    let response = await baseRequest.get(`/topic/${topicId}/follower`);
     return response.data;
 }

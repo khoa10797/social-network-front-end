@@ -152,14 +152,9 @@
             }
         },
         mounted() {
-            this.getUser();
             this.getPostByUser();
         },
         methods: {
-            getUser: async function () {
-                let user = localStorage.getItem('user');
-                await this.$store.dispatch('setUserAction', JSON.parse(user));
-            },
             getPostByUser: async function () {
                 let user = JSON.parse(localStorage.getItem('user'));
                 if (user === null) {

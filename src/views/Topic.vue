@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="navbar-menu-topic">
-                        <b-tabs v-model="activeTab">
+                        <b-tabs v-model="activeTab" @change="changeTab">
                             <b-tab-item label="Bài viết">
                             </b-tab-item>
 
@@ -57,13 +57,28 @@
                 </div>
             </div>
 
-            <div>
+            <div class="container-content">
                 <div v-if="activeTab === 0">
                     <Post v-for="post in posts" :key="post.post_id" :post="post"/>
                 </div>
 
                 <div v-if="activeTab === 1">
-                    <h1 class="title is-1">Giới thiệu</h1>
+                    <div class="card custom-card container-follower">
+                        <div v-for="follower in followers" :key="follower.user_id">
+                            <div class="follower">
+                                <div>
+                                    <figure class="image">
+                                        <img :src="follower.avatar" alt="">
+                                    </figure>
+                                    <router-link :to="{path: 'user', query: {userId: follower.user_id}}">
+                                        <p class="has-text-black is-text-decoration-line">
+                                            <b>{{follower.name}}</b>
+                                        </p>
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,7 +102,8 @@
         data() {
             return {
                 activeTab: 0,
-                topic: Object
+                topic: Object,
+                followers: []
             }
         },
         computed: {
@@ -127,6 +143,12 @@
 
                 this.topic.number_follow += updatedNumberFollow;
                 this.topic.user_status = userStatus;
+            },
+            changeTab: async function () {
+                if (this.activeTab === 1) {
+                    let response = await TopicService.getFollowerByTopicId(this.topic.topic_id);
+                    this.followers = response.data;
+                }
             }
         }
     }
@@ -202,6 +224,46 @@
             span {
                 font-weight: 500;
             }
+        }
+    }
+
+    .container-follower {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        .follower {
+            height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 2px #0000001a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+
+            > div {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                    font-weight: 700;
+                    color: #0a0a0a !important
+                }
+            }
+
+            figure {
+                width: 80px;
+                height: 80px;
+                margin-right: 20px;
+            }
+        }
+
+        > div {
+            height: 110px;
+            width: 50%;
+            padding: 5px;
         }
     }
 </style>
