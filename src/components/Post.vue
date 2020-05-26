@@ -132,7 +132,7 @@
                 if (this.valueComment.length > 0) {
                     await this.$store.dispatch('addCommentAction', {
                         'post_id': this.$props.post.post_id,
-                        'user_owner_id': this.$props.post.user_owner.user_id,
+                        'user_owner_id': this.$store.state.user.user_id,
                         'content': this.valueComment
                     });
                     this.valueComment = '';

@@ -14,7 +14,7 @@
         </template>
 
         <template slot="end">
-            <b-navbar-item class="custom-navbar-item" tag="div">
+            <b-navbar-item v-if="user != null" class="custom-navbar-item" tag="div">
                 <div class="btn-user-right">
                     <div>
                         <figure class="image is-32x32">
@@ -25,14 +25,29 @@
                         <span>{{userFirstName}}</span>
                     </div>
                 </div>
+                <div class="custom-notification">
+                    <div>
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div v-if="numberNoti > 0" class="number-noti">
+                        {{numberNoti}}
+                    </div>
+                </div>
             </b-navbar-item>
         </template>
     </b-navbar>
 </template>
 
 <script>
+    import * as NotificationService from "../services/notification_service";
+
     export default {
         name: "Navbar",
+        data() {
+            return {
+                numberNoti: 0
+            }
+        },
         computed: {
             user() {
                 return this.$store.state.user;
@@ -44,11 +59,19 @@
         },
         mounted() {
             this.getUser();
+            this.countNotification();
         },
         methods: {
             getUser: async function () {
                 let user = localStorage.getItem('user');
                 await this.$store.dispatch('setUserAction', JSON.parse(user));
+            },
+            countNotification: function () {
+                setInterval(() => {
+                    NotificationService.countNotSeenByUserId(this.user.user_id).then(respone => {
+                        this.numberNoti = respone.data.count;
+                    })
+                }, 10000)
             }
         }
     };
@@ -71,8 +94,9 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding: 5px 10px;
+        padding: 2px 10px;
         border-radius: 20px;
+        margin-right: 10px;
 
         .image {
             margin-right: 10px;
@@ -84,6 +108,37 @@
 
         span {
             font-weight: bold;
+        }
+    }
+
+    .custom-notification {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e4e6eb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .number-noti {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            left: 25px;
+            bottom: 25px;
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        i {
+            font-size: 18px;
         }
     }
 </style>

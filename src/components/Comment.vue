@@ -47,7 +47,8 @@
                 </div>
 
                 <div class="action-comment-bottom">
-                    <span @click="updateUserStatus">Thích</span>
+                    <span v-if="comment.number_like !== undefined && comment.number_like > 0" @click="updateUserStatus">Bỏ thích</span>
+                    <span v-else @click="updateUserStatus">Thích</span>
                     <span @click="openInputComment">Trả lời</span>
                 </div>
             </div>
@@ -109,7 +110,7 @@
                 if (this.valueReplyComment.length > 0) {
                     await this.$store.dispatch('addChildCommentAction', {
                         'post_id': this.$props.comment.post_id,
-                        'user_owner_id': this.$props.comment.user_owner.user_id,
+                        'user_owner_id': this.$store.state.user.user_id,
                         'parent_id': this.$props.comment.comment_id,
                         'content': this.valueReplyComment
                     });
