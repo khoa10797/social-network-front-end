@@ -156,7 +156,7 @@
 
 <style lang="scss" scoped>
     .container-topic {
-        margin-top: 20px;
+        padding-top: 80px;
         max-width: 960px;
     }
 

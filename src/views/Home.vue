@@ -216,7 +216,7 @@
 
 <style lang="scss" scoped>
     .container-list-post {
-        margin-top: 30px;
+        padding-top: 80px;
         max-width: 680px;
     }
 

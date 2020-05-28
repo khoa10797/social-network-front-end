@@ -68,6 +68,24 @@
         display: flex;
         align-items: center;
     }
+
+
+    .container-popup {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        z-index: 100;
+    }
+
+    .z-index-200 {
+        z-index: 200;
+    }
+
+    .font-w700 {
+        font-weight: 700;
+    }
 </style>
 
 <!--override property buefy-->
@@ -82,5 +100,9 @@
 
     .modal-card-foot {
         background-color: #ffffff !important;
+    }
+
+    .title {
+        color: #050505 !important;
     }
 </style>

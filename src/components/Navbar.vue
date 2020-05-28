@@ -1,41 +1,62 @@
 <template>
-    <b-navbar>
-        <template slot="brand">
-            <b-navbar-item tag="router-link" :to="{ path: '/' }">
-                <img class="logo" src="../assets/images/majinbuu.png" alt="Ma bư"/>
-            </b-navbar-item>
-        </template>
-        <template slot="start">
-            <b-navbar-item>
-                <b-field>
-                    <b-input placeholder="Tìm kiếm" type="search" icon="magnify" rounded></b-input>
-                </b-field>
-            </b-navbar-item>
-        </template>
+    <div>
+        <b-navbar :fixed-top="true">
+            <template slot="brand">
+                <b-navbar-item tag="router-link" :to="{ path: '/' }">
+                    <img class="logo" src="../assets/images/majinbuu.png" alt="Ma bư"/>
+                </b-navbar-item>
+            </template>
+            <template slot="start">
+                <b-navbar-item>
+                    <b-field>
+                        <b-input placeholder="Tìm kiếm" type="search" icon="magnify" rounded></b-input>
+                    </b-field>
+                </b-navbar-item>
+            </template>
 
-        <template slot="end">
-            <b-navbar-item v-if="user != null" class="custom-navbar-item" tag="div">
-                <div class="btn-user-right">
-                    <div>
-                        <figure class="image is-32x32">
-                            <img class="is-rounded" :src="user.avatar" alt=""/>
-                        </figure>
+            <template slot="end">
+                <b-navbar-item v-if="user != null" class="custom-navbar-item" tag="div">
+                    <div class="btn-user-right">
+                        <div>
+                            <figure class="image is-32x32">
+                                <img class="is-rounded" :src="user.avatar" alt=""/>
+                            </figure>
+                        </div>
+                        <div>
+                            <span>{{userFirstName}}</span>
+                        </div>
                     </div>
-                    <div>
-                        <span>{{userFirstName}}</span>
+                    <div class="custom-notification" @click="openPopupNoti">
+                        <div>
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div v-if="numberNoti > 0" class="number-noti">
+                            {{numberNoti}}
+                        </div>
                     </div>
+                </b-navbar-item>
+            </template>
+        </b-navbar>
+        <div class="container-popup" :style="styleDisplayNoti">
+            <div class="close-container-noti" @click="isDisplayNotiContainer = false">
+
+            </div>
+            <div class="container-noti">
+                <div>
+                    <h4 class="title is-4 font-w700">Thông báo</h4>
                 </div>
-                <div class="custom-notification">
-                    <div>
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <div v-if="numberNoti > 0" class="number-noti">
-                        {{numberNoti}}
-                    </div>
+
+                <div class="not-seen-noti">
+                    <h6 class="title is-6">Chưa xem</h6>
+
                 </div>
-            </b-navbar-item>
-        </template>
-    </b-navbar>
+
+                <div class="seen-noti">
+
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -45,7 +66,10 @@
         name: "Navbar",
         data() {
             return {
-                numberNoti: 0
+                numberNoti: 0,
+                isDisplayNotiContainer: false,
+                seenNoti: [],
+                notSeenNoti: []
             }
         },
         computed: {
@@ -55,6 +79,9 @@
             userFirstName() {
                 let s = this.user.name.split(' ');
                 return s[s.length - 1];
+            },
+            styleDisplayNoti() {
+                return this.isDisplayNotiContainer === false ? {display: "none"} : {}
             }
         },
         mounted() {
@@ -67,11 +94,26 @@
                 await this.$store.dispatch('setUserAction', JSON.parse(user));
             },
             countNotification: function () {
-                setInterval(() => {
-                    NotificationService.countNotSeenByUserId(this.user.user_id).then(respone => {
-                        this.numberNoti = respone.data.count;
-                    })
-                }, 10000)
+                if (this.user != null) {
+                    setInterval(() => {
+                        NotificationService.countNotSeenByUserId(this.user.user_id).then(respone => {
+                            this.numberNoti = respone.data.count;
+                        })
+                    }, 10000)
+                }
+            },
+            openPopupNoti: async function () {
+                this.isDisplayNotiContainer = !this.isDisplayNotiContainer
+                if (this.isDisplayNotiContainer === true) {
+                    let response = await NotificationService.getByUserId(this.user.user_id);
+                    let notifications = response.data;
+                    notifications.for(item => {
+                        if (item.isSeen === false)
+                            this.notSeenNoti.push(item);
+                        else
+                            this.seenNoti.push(item);
+                    });
+                }
             }
         }
     };
@@ -140,5 +182,36 @@
         i {
             font-size: 18px;
         }
+    }
+
+    .close-container-noti {
+        height: 100%;
+        width: calc(100% - 400px);
+        position: absolute;
+    }
+
+    .container-noti {
+        position: absolute;
+        z-index: 1000;
+        width: 360px;
+        height: 90%;
+        background: #ffffff;
+        right: 40px;
+        top: 55px;
+        box-shadow: 0 12px 28px 0 #00000033;
+        border-radius: 10px;
+        padding-top: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .not-seen-noti {
+        margin-top: 20px;
+    }
+
+    .seen-noti {
+
     }
 </style>
