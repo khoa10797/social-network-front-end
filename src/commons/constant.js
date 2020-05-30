@@ -5,7 +5,16 @@ export const USER_STATUS = {
     FOLLOW: "follow"
 };
 
+export const ONE_HOURS = 3600000;
+
+export const NOTIFICATION_TYPE = {
+    ADD_COMMENT: "ADD_COMMENT",
+    LIKE_POST: "LIKE_POST"
+}
+
 export const Constant = {
     DEFAULT_AVATAR,
-    USER_STATUS
+    USER_STATUS,
+    ONE_HOURS,
+    NOTIFICATION_TYPE
 };

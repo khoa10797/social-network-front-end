@@ -50,7 +50,8 @@
                 </div>
 
                 <div class="action-comment-bottom">
-                    <span v-if="comment.number_like !== undefined && comment.number_like > 0" @click="updateUserStatus">Bỏ thích</span>
+                    <span v-if="comment.number_like !== undefined && comment.number_like > 0 && comment.user_status === 'like'"
+                          @click="updateUserStatus">Bỏ thích</span>
                     <span v-else @click="updateUserStatus">Thích</span>
                     <span @click="openInputComment">Trả lời</span>
                 </div>
@@ -112,6 +113,9 @@
         computed: {
             styleDisplayPopup() {
                 return this.showPopup === false ? {display: "none"} : {}
+            },
+            user() {
+                return this.$store.state.user;
             }
         },
         methods: {

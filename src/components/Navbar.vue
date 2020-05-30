@@ -46,10 +46,10 @@
                     <h4 class="title is-4 font-w700">Thông báo</h4>
                 </div>
 
-                <div class="new-noti">
+                <div v-if="this.newNotifications.length > 0" class="new-noti">
                     <h6 class="title is-6 titl-list-noti">Mới</h6>
                     <div class="list-noti">
-                        <div v-for="noti in this.newNoti" :key="noti.id" class="noti-item">
+                        <div v-for="noti in this.newNotifications" :key="noti.id" class="noti-item">
                             <router-link :to="{path: 'post', query: {postId: noti.post_id}}">
                                 <div>
                                     <figure class="image">
@@ -57,7 +57,29 @@
                                     </figure>
                                 </div>
                                 <div class="noti-content">
-                                    <p><b>{{noti.publisher.name}}</b> {{genContentNotification(noti)}}</p>
+                                    <p>
+                                        <b>{{noti.publisher.name}}</b> {{genNotificationType(noti)}} <b>{{genNotificationOwner(noti)}}</b>
+                                    </p>
+                                </div>
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="this.oldNotifications.length > 0" class="old-noti">
+                    <h6 class="title is-6 titl-list-noti">Trước đó</h6>
+                    <div class="list-noti">
+                        <div v-for="noti in this.oldNotifications" :key="noti.id" class="noti-item">
+                            <router-link :to="{path: 'post', query: {postId: noti.post_id}}">
+                                <div>
+                                    <figure class="image">
+                                        <img class="is-rounded" :src="noti.publisher.avatar" alt=""/>
+                                    </figure>
+                                </div>
+                                <div class="noti-content">
+                                    <p>
+                                        <b>{{noti.publisher.name}}</b> {{genNotificationType(noti)}} <b>{{genNotificationOwner(noti)}}</b>
+                                    </p>
                                 </div>
                             </router-link>
                         </div>
@@ -74,6 +96,7 @@
 
 <script>
     import * as NotificationService from "../services/notification_service";
+    import {Constant} from '../commons/constant';
 
     export default {
         name: "Navbar",
@@ -81,8 +104,8 @@
             return {
                 numberNoti: 0,
                 isDisplayNotiContainer: false,
-                newNoti: [],
-                oldNoti: []
+                newNotifications: [],
+                oldNotifications: []
             }
         },
         computed: {
@@ -124,22 +147,38 @@
                     let response = await NotificationService.getByUserId(this.user.user_id);
                     let notifications = response.data;
                     if (notifications.length > 0) {
-                        let newNoti = [];
-                        let oldNoti = [];
+                        let newNotifications = [];
+                        let oldNotifications = [];
+                        let currentTime = new Date().getTime()
                         notifications.forEach(item => {
-                            newNoti.push(item);
+                            if (currentTime - item.created_at <= Constant.ONE_HOURS) {
+                                newNotifications.push(item);
+                            } else {
+                                oldNotifications.push(item);
+                            }
                         });
-                        this.newNoti = newNoti;
+
+
+                        this.newNotifications = newNotifications;
+                        this.oldNotifications = oldNotifications;
                     }
                 }
             },
-            genContentNotification: function (notification) {
+            genNotificationType: function (notification) {
                 let content = "";
-                if (notification.type === "ADD_COMMENT") {
-                    content += "đã bình luận về bài viết của ";
+                switch (notification.type) {
+                    case Constant.NOTIFICATION_TYPE.ADD_COMMENT:
+                        content += "đã bình luận về bài viết của ";
+                        break
+                    case Constant.NOTIFICATION_TYPE.LIKE_POST:
+                        content += "đã thích bài viết của ";
+                        break
                 }
-                content += notification.subscriber_id === this.user.user_id ? "bạn" : notification.owner_post.name;
                 return content;
+            },
+            genNotificationOwner: function (notification) {
+                debugger
+                return notification.owner_post.user_id === this.user.user_id ? "bạn" : notification.owner_post.name;
             }
         }
     };
@@ -238,7 +277,7 @@
     }
 
     .old-noti {
-
+        margin-top: 20px;
     }
 
     .titl-list-noti {
