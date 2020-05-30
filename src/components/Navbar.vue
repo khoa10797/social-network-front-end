@@ -26,7 +26,7 @@
                             <span>{{userFirstName}}</span>
                         </div>
                     </div>
-                    <div class="custom-notification" @click="openPopupNoti">
+                    <div class="custom-notification" @click="switchPopupNoti">
                         <div>
                             <i class="fas fa-bell"></i>
                         </div>
@@ -46,12 +46,25 @@
                     <h4 class="title is-4 font-w700">Thông báo</h4>
                 </div>
 
-                <div class="not-seen-noti">
-                    <h6 class="title is-6">Chưa xem</h6>
-
+                <div class="new-noti">
+                    <h6 class="title is-6 titl-list-noti">Mới</h6>
+                    <div class="list-noti">
+                        <div v-for="noti in this.newNoti" :key="noti.id" class="noti-item">
+                            <router-link :to="{path: 'post', query: {postId: noti.post_id}}">
+                                <div>
+                                    <figure class="image">
+                                        <img class="is-rounded" :src="noti.publisher.avatar" alt=""/>
+                                    </figure>
+                                </div>
+                                <div class="noti-content">
+                                    <p><b>{{noti.publisher.name}}</b> {{genContentNotification(noti)}}</p>
+                                </div>
+                            </router-link>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="seen-noti">
+                <div class="old-noti">
 
                 </div>
             </div>
@@ -68,8 +81,8 @@
             return {
                 numberNoti: 0,
                 isDisplayNotiContainer: false,
-                seenNoti: [],
-                notSeenNoti: []
+                newNoti: [],
+                oldNoti: []
             }
         },
         computed: {
@@ -102,18 +115,31 @@
                     }, 10000)
                 }
             },
-            openPopupNoti: async function () {
+            switchPopupNoti: async function () {
                 this.isDisplayNotiContainer = !this.isDisplayNotiContainer
                 if (this.isDisplayNotiContainer === true) {
+                    await NotificationService.seenNotification(this.user.user_id);
+                    this.numberNoti = 0;
+
                     let response = await NotificationService.getByUserId(this.user.user_id);
                     let notifications = response.data;
-                    notifications.for(item => {
-                        if (item.isSeen === false)
-                            this.notSeenNoti.push(item);
-                        else
-                            this.seenNoti.push(item);
-                    });
+                    if (notifications.length > 0) {
+                        let newNoti = [];
+                        let oldNoti = [];
+                        notifications.forEach(item => {
+                            newNoti.push(item);
+                        });
+                        this.newNoti = newNoti;
+                    }
                 }
+            },
+            genContentNotification: function (notification) {
+                let content = "";
+                if (notification.type === "ADD_COMMENT") {
+                    content += "đã bình luận về bài viết của ";
+                }
+                content += notification.subscriber_id === this.user.user_id ? "bạn" : notification.owner_post.name;
+                return content;
             }
         }
     };
@@ -201,17 +227,55 @@
         box-shadow: 0 12px 28px 0 #00000033;
         border-radius: 10px;
         padding-top: 20px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
         display: flex;
         flex-direction: column;
     }
 
-    .not-seen-noti {
+    .new-noti {
         margin-top: 20px;
     }
 
-    .seen-noti {
+    .old-noti {
 
     }
+
+    .titl-list-noti {
+        margin-left: 10px;
+        margin-bottom: 5px;
+    }
+
+    .list-noti {
+        display: flex;
+        flex-direction: column;
+
+        .noti-item {
+            display: flex;
+            padding: 10px;
+            border-radius: 10px;
+
+            .image {
+                width: 56px;
+                height: 56px;
+            }
+        }
+
+        a {
+            display: flex;
+            color: #050505 !important;
+            border-radius: 10px;
+        }
+
+        :hover {
+            background: #f0f2f5;
+            cursor: pointer;
+        }
+    }
+
+    .noti-content {
+        margin-left: 10px;
+        font-size: .9375rem;
+    }
+
 </style>

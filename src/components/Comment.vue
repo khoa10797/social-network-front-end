@@ -1,5 +1,8 @@
 <template>
     <div class="container-comment">
+        <div class="container-popup" :style="styleDisplayPopup" @click="closePopup">
+        </div>
+
         <div class="parent-comment">
             <div class="card-image mr-10">
                 <figure class="image is-40x40">
@@ -25,7 +28,7 @@
 
 
                     <div class="action-comment-right">
-                        <i @click="showMenuComment = !showMenuComment" class="fas fa-ellipsis-h"></i>
+                        <i @click="switchOpenMenuComment" class="fas fa-ellipsis-h"></i>
 
                         <div v-if="showMenuComment" class="menu-comment">
                             <ul class="menu-list">
@@ -102,7 +105,13 @@
             return {
                 showInputComment: false,
                 showMenuComment: false,
-                valueReplyComment: ''
+                valueReplyComment: '',
+                showPopup: false
+            }
+        },
+        computed: {
+            styleDisplayPopup() {
+                return this.showPopup === false ? {display: "none"} : {}
             }
         },
         methods: {
@@ -116,10 +125,12 @@
                     });
                     this.valueReplyComment = '';
                 }
-            },
+            }
+            ,
             openInputComment: function () {
                 this.showInputComment = true;
-            },
+            }
+            ,
             deleteComment: async function () {
                 if (this.comment.parent_id !== undefined && this.comment.parent_id !== null) {
                     await this.$store.dispatch('removeChildCommentAction', {
@@ -133,7 +144,8 @@
                         commentId: this.comment.comment_id
                     });
                 }
-            },
+            }
+            ,
             updateUserStatus: async function () {
                 let userStatus = this.comment.user_status === 'like' ? 'normal' : 'like';
 
@@ -146,6 +158,14 @@
                         'user_status': userStatus
                     }
                 })
+            },
+            switchOpenMenuComment: function () {
+                this.showMenuComment = !this.showMenuComment
+                this.showPopup = this.showMenuComment === true;
+            },
+            closePopup: function () {
+                this.showMenuComment = false;
+                this.showPopup = false;
             }
         }
     }

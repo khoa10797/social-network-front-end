@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from "../views/Login";
 import User from "../views/User";
 import Topic from "../views/Topic";
+import PostDetail from "../views/PostDetail";
 
 Vue.use(VueRouter);
 
@@ -28,6 +29,12 @@ const routes = [
         path: '/topic',
         name: 'Topic',
         component: Topic,
+        props: (route) => ({query: route.query})
+    },
+    {
+        path: '/post',
+        name: 'PostDetail',
+        component: PostDetail,
         props: (route) => ({query: route.query})
     },
     {path: '*', redirect: '/'}

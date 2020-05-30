@@ -140,3 +140,8 @@ export const getPostByTopicIdAction = async ({commit}, topicId) => {
     let response = await PostService.getByTopicId(topicId);
     commit('SET_POSTS', response.data);
 };
+
+export const setPostAction = async ({commit}, post) => {
+    let posts = [post];
+    commit('SET_POSTS', posts);
+}

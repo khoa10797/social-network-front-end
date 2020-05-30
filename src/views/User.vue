@@ -95,7 +95,7 @@
 
 <style lang="scss" scoped>
     .container-user {
-        margin-top: 20px;
+        padding-top: 80px;
         max-width: 960px;
     }
 

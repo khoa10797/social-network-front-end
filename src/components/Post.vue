@@ -1,5 +1,8 @@
 <template>
     <div class="custom-card card">
+        <div class="container-popup" :style="styleDisplayPopup" @click="closePopup">
+        </div>
+
         <div v-if="showMenuPost" class="menu-post">
             <ul class="menu-list">
                 <li>
@@ -20,7 +23,7 @@
         <div class="post-top">
             <div class="post-header">
                 <PostUserInfo :user="post.user_owner" :time="post.created_at"/>
-                <div class="btn-menu-post" @click="showMenuPost = !showMenuPost">
+                <div class="btn-menu-post" @click="switchOpenMenuPost">
                     <div>
                         <i class="fas fa-ellipsis-h"></i>
                     </div>
@@ -120,7 +123,8 @@
                 valueComment: '',
                 showMenuPost: false,
                 showInputComment: false,
-                postContent: ''
+                postContent: '',
+                showPopup: false
             }
         },
         methods: {
@@ -186,6 +190,14 @@
                         })
                     }
                 })
+            },
+            switchOpenMenuPost: function () {
+                this.showMenuPost = !this.showMenuPost
+                this.showPopup = this.showMenuPost === true;
+            },
+            closePopup: function () {
+                this.showMenuPost = false;
+                this.showPopup = false;
             }
         },
         computed: {
@@ -195,6 +207,9 @@
             },
             styleBtnLikePost() {
                 return this.post.user_status === 'like' ? {color: "#2078F4"} : {}
+            },
+            styleDisplayPopup() {
+                return this.showPopup === false ? {display: "none"} : {}
             }
         },
         mounted() {
