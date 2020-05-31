@@ -47,3 +47,8 @@ export const getByTopicId = async (topicId) => {
     let response = await baseRequest.get(`/post/topic/${topicId}`);
     return response.data;
 };
+
+export const updatePost = async (post) => {
+    let response = await baseRequest.put(`/post/${post.post_id}`, post);
+    return response.data;
+};

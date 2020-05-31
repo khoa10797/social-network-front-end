@@ -48,7 +48,7 @@
         <b-modal :active.sync="showAddPostModal" :width="600" scroll="keep">
             <div class="custom-modal custom-card">
                 <div class="card-header justify-content-center">
-                    <h1>Tạo bài viết</h1>
+                    <h1>Bạn đang nghĩ gì</h1>
                 </div>
                 <div class="card-content">
                     <div class="is-flex">
@@ -133,13 +133,14 @@
             return {
                 showAddPostModal: false,
                 postContent: '',
+                postTitle: '',
                 imageData: null,
                 imageName: '',
                 imagePreviewUrl: null,
                 DEFAULT_AVATAR: Constant.DEFAULT_AVATAR,
                 editor: BalloonEditor,
                 editorConfig: {
-                    placeholder: 'Bạn đang nghĩ gì...'
+                    placeholder: 'Nhập nội dung...'
                 }
             }
         },
@@ -167,6 +168,7 @@
                 if (this.postContent.length > 0) {
                     await this.$store.dispatch('addPostAction', {
                         'user_owner_id': this.$store.state.user.user_id,
+                        'title': this.postTitle,
                         'content': this.postContent,
                         'images': [this.imagePreviewUrl]
                     }).then(result => {
@@ -249,30 +251,6 @@
         }
     }
 
-    .card-content {
-        padding: 10px;
-
-        .align-item-center {
-            margin-left: 10px;
-        }
-
-        .field {
-            margin-top: 10px;
-            margin-bottom: 20px;
-
-
-            .ck-blurred {
-                border: none !important;
-                box-shadow: none !important;
-                -webkit-box-shadow: none !important;
-            }
-        }
-
-        .button {
-            width: 100%;
-        }
-    }
-
     .textarea-none-border {
         border: none;
         resize: none;
@@ -280,6 +258,44 @@
         -webkit-box-shadow: none !important;
     }
 
+    .menu-topic {
+        position: absolute;
+        left: -200px;
+
+        .menu-list {
+            .custom-menu-item {
+                display: flex;
+                align-items: center;
+                height: 100%;
+                border-radius: 10px;
+                padding: 0 10px;
+
+                span {
+                    font-weight: 500;
+                }
+            }
+
+            li {
+                > div {
+                    height: 50px;
+
+                    :hover {
+                        cursor: pointer;
+                        background-color: #e4e6eb;
+                    }
+                }
+            }
+
+            a {
+                padding: unset;
+                height: 100%;
+                border-radius: 10px;
+            }
+        }
+    }
+</style>
+
+<style lang="scss">
     .menu-bottom-popup-add-post {
         display: flex;
         align-items: center;
@@ -332,39 +348,27 @@
         }
     }
 
-    .menu-topic {
-        position: absolute;
-        left: -200px;
+    .card-content {
+        padding: 10px;
 
-        .menu-list {
-            .custom-menu-item {
-                display: flex;
-                align-items: center;
-                height: 100%;
-                border-radius: 10px;
-                padding: 0 10px;
+        .align-item-center {
+            margin-left: 10px;
+        }
 
-                span {
-                    font-weight: 500;
-                }
+        .field {
+            margin-top: 10px;
+            margin-bottom: 20px;
+
+
+            .ck-blurred {
+                border: none !important;
+                box-shadow: none !important;
+                -webkit-box-shadow: none !important;
             }
+        }
 
-            li {
-                > div {
-                    height: 50px;
-
-                    :hover {
-                        cursor: pointer;
-                        background-color: #e4e6eb;
-                    }
-                }
-            }
-
-            a {
-                padding: unset;
-                height: 100%;
-                border-radius: 10px;
-            }
+        .button {
+            width: 100%;
         }
     }
 </style>

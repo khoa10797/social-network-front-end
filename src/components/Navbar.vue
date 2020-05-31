@@ -16,16 +16,18 @@
 
             <template slot="end">
                 <b-navbar-item v-if="user != null" class="custom-navbar-item" tag="div">
-                    <div class="btn-user-right">
-                        <div>
-                            <figure class="image is-32x32">
-                                <img class="is-rounded" :src="user.avatar" alt=""/>
-                            </figure>
+                    <router-link :to="{path: 'user', query: {userId: user.user_id}}">
+                        <div class="btn-user-right">
+                            <div>
+                                <figure class="image is-32x32">
+                                    <img class="is-rounded" :src="user.avatar" alt=""/>
+                                </figure>
+                            </div>
+                            <div>
+                                <span>{{userFirstName}}</span>
+                            </div>
                         </div>
-                        <div>
-                            <span>{{userFirstName}}</span>
-                        </div>
-                    </div>
+                    </router-link>
                     <div class="custom-notification" @click="switchPopupNoti">
                         <div>
                             <i class="fas fa-bell"></i>
@@ -177,7 +179,6 @@
                 return content;
             },
             genNotificationOwner: function (notification) {
-                debugger
                 return notification.owner_post.user_id === this.user.user_id ? "bạn" : notification.owner_post.name;
             }
         }
@@ -194,6 +195,12 @@
             background: #f0f2f5;
             cursor: pointer;
         }
+
+        a {
+            color: #050505 !important;
+            border-radius: 20px;
+            margin-right: 10px;
+        }
     }
 
     .btn-user-right {
@@ -203,7 +210,6 @@
         align-items: center;
         padding: 2px 10px;
         border-radius: 20px;
-        margin-right: 10px;
 
         .image {
             margin-right: 10px;

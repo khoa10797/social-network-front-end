@@ -28,6 +28,11 @@ export const addPostAction = async ({commit}, post) => {
     commit('ADD_POST', response.data);
 };
 
+export const updatePostAction = async ({commit}, post) => {
+    let response = await PostService.updatePost(post);
+    commit('UPDATE_POST', {postId: response.data.post_id, post: response.data});
+};
+
 export const removePostAction = async ({commit}, postId) => {
     await PostService.remove(postId);
     commit('REMOVE_POST', postId);

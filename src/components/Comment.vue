@@ -13,21 +13,20 @@
             </div>
 
             <div class="right-parent-comment">
-                <div class="container-comment-content">
+                <div class="container-comment-content" @mouseover="showActionComment = true">
                     <div class="comment-content">
                         <router-link :to="{path: 'user', query: {userId: comment.user_owner.user_id}}">
-                            <p class="has-text-black is-text-decoration-line">
-                                <b>{{comment.user_owner.name}}</b>
+                            <p class="has-text-black is-text-decoration-line" style="font-size: 14px">
+                                <span style="font-weight: 600">{{comment.user_owner.name}}</span>
                             </p>
                         </router-link>
 
-                        <p class="has-text-black">
-                            {{comment.content}}
-                        </p>
+                        <div v-html="comment.content" class="has-text-black">
+
+                        </div>
                     </div>
 
-
-                    <div class="action-comment-right">
+                    <div v-if="showActionComment === true" class="action-comment-right">
                         <i @click="switchOpenMenuComment" class="fas fa-ellipsis-h"></i>
 
                         <div v-if="showMenuComment" class="menu-comment">
@@ -53,7 +52,7 @@
                     <span v-if="comment.number_like !== undefined && comment.number_like > 0 && comment.user_status === 'like'"
                           @click="updateUserStatus">Bỏ thích</span>
                     <span v-else @click="updateUserStatus">Thích</span>
-                    <span @click="openInputComment">Trả lời</span>
+                    <span v-if="comment.parent_id === null" @click="openInputComment">Trả lời</span>
                 </div>
             </div>
         </div>
@@ -70,12 +69,9 @@
                 </figure>
             </div>
 
-            <ResizableInput
-                    style="background-color: #f0f2f5"
-                    placeholder="Viết phản hồi..."
-                    v-model="valueReplyComment"
-                    rows="1"
-            />
+            <div class="container-input-comment">
+                <ckeditor :editor="editor" v-model="valueReplyComment" :config="editorConfig"/>
+            </div>
 
             <div class="btn-send-comment is-flex" @click="sendChildComment()">
                 <svg height="25px" width="25px" viewBox="0 0 24 24">
@@ -89,7 +85,8 @@
 </template>
 
 <script>
-    import ResizableInput from "./ResizableInput";
+    import CKEditor from "@ckeditor/ckeditor5-vue";
+    import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
 
     export default {
         name: "Comment",
@@ -100,14 +97,20 @@
             }
         },
         components: {
-            ResizableInput
+            'ckeditor': CKEditor.component,
+            BalloonEditor
         },
         data() {
             return {
                 showInputComment: false,
                 showMenuComment: false,
                 valueReplyComment: '',
-                showPopup: false
+                showPopup: false,
+                showActionComment: false,
+                editor: BalloonEditor,
+                editorConfig: {
+                    placeholder: 'Viết bình luận...'
+                }
             }
         },
         computed: {
@@ -198,6 +201,7 @@
         background-color: #f0f2f5;
         padding: 5px 10px;
         border-radius: 20px;
+        position: relative;
     }
 
     .child-comment {
