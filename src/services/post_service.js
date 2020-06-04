@@ -52,3 +52,16 @@ export const updatePost = async (post) => {
     let response = await baseRequest.put(`/post/${post.post_id}`, post);
     return response.data;
 };
+
+export const searchByFilter = async (postFilter) => {
+    let query = '';
+    if (postFilter.title) {
+        query += `title=${postFilter.title}`;
+    }
+    if (postFilter.content) {
+        query += `&content=${postFilter.content}`;
+    }
+
+    let response = await baseRequest.get(`/post/filter?${query}`);
+    return response.data;
+}

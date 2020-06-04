@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container-navbar">
         <b-navbar :fixed-top="true">
             <template slot="brand">
                 <b-navbar-item tag="router-link" :to="{ path: '/' }">
@@ -7,11 +7,37 @@
                 </b-navbar-item>
             </template>
             <template slot="start">
-                <b-navbar-item>
-                    <b-field>
-                        <b-input placeholder="Tìm kiếm" type="search" icon="magnify" rounded></b-input>
-                    </b-field>
-                </b-navbar-item>
+                <b-autocomplete
+                        v-model="keyWord"
+                        rounded
+                        :data="filterData"
+                        placeholder="Tìm kiếm"
+                        icon="magnify"
+                        clearable
+                        :loading="isFetching"
+                        @typing="getAsyncData"
+                        @select="option => selected = option">
+
+                    <template slot="header">
+                        <a>
+                            <span> Tìm kiếm cho {{keyWord}}</span>
+                        </a>
+                    </template>
+
+                    <template slot="empty">Không có kết quả nào</template>
+
+                    <template slot-scope="props">
+                        <div class="media">
+                            <div class="media-left">
+                                <img v-if="props.option.images.length > 0" :src="props.option.images[0]" alt="">
+                                <i v-else class="fas fa-images"></i>
+                            </div>
+                            <div class="media-content" v-html="props.option.content">
+
+                            </div>
+                        </div>
+                    </template>
+                </b-autocomplete>
             </template>
 
             <template slot="end">
@@ -98,7 +124,9 @@
 
 <script>
     import * as NotificationService from "../services/notification_service";
+    import * as PostService from "../services/post_service";
     import {Constant} from '../commons/constant';
+    import {debounce} from "lodash";
 
     export default {
         name: "Navbar",
@@ -107,7 +135,11 @@
                 numberNoti: 0,
                 isDisplayNotiContainer: false,
                 newNotifications: [],
-                oldNotifications: []
+                oldNotifications: [],
+                keyWord: '',
+                filterData: [],
+                selected: null,
+                isFetching: false
             }
         },
         computed: {
@@ -180,7 +212,27 @@
             },
             genNotificationOwner: function (notification) {
                 return notification.owner_post.user_id === this.user.user_id ? "bạn" : notification.owner_post.name;
-            }
+            },
+            getAsyncData: debounce(function (name) {
+                if (!name.length) {
+                    this.filterData = [];
+                    return;
+                }
+                this.isFetching = true;
+                PostService.searchByFilter({content: name}).then(({data}) => {
+                    this.filterData = [];
+                    data.forEach(item => {
+                        console.log(item);
+                        this.filterData.push(item);
+                    });
+                }).catch((error) => {
+                    this.filterData = [];
+                    console.log(error);
+                }).finally(() => {
+                    this.isFetching = false;
+                });
+
+            }, 500)
         }
     };
 </script>
@@ -323,4 +375,37 @@
         font-size: .9375rem;
     }
 
+</style>
+
+<style lang="scss">
+    .container-navbar {
+        .navbar-start {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            .control {
+                width: 300px;
+            }
+        }
+    }
+
+    .media {
+        .media-left {
+            img {
+                width: 48px;
+                height: 48px;
+            }
+
+            i {
+                font-size: 48px;
+            }
+        }
+
+        .media-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
 </style>
