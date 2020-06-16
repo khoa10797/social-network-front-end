@@ -19,9 +19,9 @@
                         @select="option => selected = option">
 
                     <template slot="header">
-                        <a>
+                        <router-link :to="{path: '/search', query: {keyword: this.keyWord}}">
                             <span> Tìm kiếm cho {{keyWord}}</span>
-                        </a>
+                        </router-link>
                     </template>
 
                     <template slot="empty">Không có kết quả nào</template>
@@ -222,7 +222,6 @@
                 PostService.searchByFilter({content: name}).then(({data}) => {
                     this.filterData = [];
                     data.forEach(item => {
-                        console.log(item);
                         this.filterData.push(item);
                     });
                 }).catch((error) => {

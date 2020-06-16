@@ -13,6 +13,11 @@ export const getPostByUserIdAction = async ({commit}, userId) => {
     commit('SET_POSTS', response.data);
 };
 
+export const searchPostByFilterAction = async ({commit}, postFilter) => {
+    let response = await PostService.searchByFilter(postFilter);
+    commit('SET_POSTS', response.data);
+};
+
 export const getTrendingPostAction = async ({commit}) => {
     let response = await PostService.getTrendingPost();
     commit('SET_POSTS', response.data);
