@@ -39,7 +39,11 @@
             </div>
         </div>
 
-        <ImageGrid :images="post.images"/>
+        <div class="card-image">
+            <img :src="post.images[0]" @click="showLightBox" alt=""/>
+        </div>
+        <LightBox ref="lightbox" :media="lightBoxMedia" :showLightBox="isShowLightBox"></LightBox>
+
         <div class="container-action-post">
             <div class="action-post">
                 <div>
@@ -112,7 +116,7 @@
         <b-modal :active.sync="showEditPostModal" :width="600" scroll="keep">
             <div class="custom-modal custom-card">
                 <div class="card-header justify-content-center">
-                    <h1>Bạn đang nghĩ gì</h1>
+                    <h1>Chỉnh sửa bài viết</h1>
                 </div>
                 <div class="card-content">
                     <div class="is-flex">
@@ -179,20 +183,20 @@
 
 <script>
     import PostUserInfo from "./PostUserInfo";
-    import ImageGrid from "./ImageGrid";
     import Comment from "./Comment";
     import CKEditor from "@ckeditor/ckeditor5-vue";
     import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
     import firebase from "firebase";
+    import LightBox from "vue-image-lightbox";
 
     export default {
         name: "Post",
         components: {
             PostUserInfo,
-            ImageGrid,
             Comment,
             'ckeditor': CKEditor.component,
-            BalloonEditor
+            BalloonEditor,
+            LightBox
         },
         props: {
             post: Object
@@ -210,7 +214,9 @@
                 editor: BalloonEditor,
                 editorConfig: {
                     placeholder: 'Viết bình luận...'
-                }
+                },
+                lightBoxMedia: [],
+                isShowLightBox: false
             }
         },
         methods: {
@@ -342,6 +348,9 @@
                     this.imagePreviewUrl = this.post.images[0];
                     this.imageName = decodeURIComponent(this.imagePreviewUrl.split('?')[0].split('images')[1]);
                 }
+            },
+            showLightBox() {
+                this.$refs.lightbox.showImage(0)
             }
         },
         computed: {
@@ -355,6 +364,9 @@
         },
         mounted() {
             this.postContent = this.post.content;
+            this.post.images.forEach(item => {
+                this.lightBoxMedia.push({thumb: item, src: item});
+            });
         }
     };
 </script>
@@ -398,6 +410,13 @@
 
     .post-content {
         padding: 10px;
+    }
+
+    .custom-card {
+        h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
     }
 
     .btn-menu-post {
@@ -445,6 +464,16 @@
             }
         }
     }
+
+    .card-image {
+        max-height: 400px;
+        overflow: hidden;
+        height: 100%;
+
+        :hover {
+            cursor: pointer;
+        }
+    }
 </style>
 
 <style lang="scss">
@@ -466,5 +495,9 @@
         border-radius: 20px;
         border: 1px solid #ced0d4;
         width: 100%;
+    }
+
+    .vue-lb-thumbnail-wrapper {
+        display: none;
     }
 </style>

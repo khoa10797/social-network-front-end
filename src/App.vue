@@ -11,6 +11,7 @@
 
     @import "~bulma";
     @import "~buefy/src/scss/buefy";
+    @import "~vue-image-lightbox/dist/vue-image-lightbox.min.css";
 </style>
 
 <style lang="scss">
@@ -85,6 +86,23 @@
 
     .font-w700 {
         font-weight: 700;
+    }
+
+    .scroll {
+        overflow-y: auto;
+        max-height: calc(100vh)
+    }
+
+    .scroll::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .scroll::-webkit-scrollbar-thumb {
+        background-color: transparent;
+    }
+
+    .scroll:hover::-webkit-scrollbar-thumb {
+        background-color: #f0f0f0;
     }
 </style>
 

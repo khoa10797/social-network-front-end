@@ -5,6 +5,7 @@ import store from './store/store'
 import Buefy from 'buefy'
 import firebase from 'firebase'
 import VueMoment from 'vue-moment'
+import VueLazyLoad from 'vue-lazyload'
 
 const firebaseConfig = {
     apiKey: "AIzaSyB7BDbZtQkpIySJEVaCLQlcfmTj5_bOe_E",
@@ -23,6 +24,7 @@ Vue.config.productionTip = false;
 Vue.use(Buefy);
 Vue.use(firebase);
 Vue.use(VueMoment);
+Vue.use(VueLazyLoad);
 
 new Vue({
     router,
