@@ -28,8 +28,8 @@
                         <div>
                             <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
                                 <div class="custom-menu-item">
-                                    <img src="../assets/icons/laptop-pngrepo-com.png" alt="">
-                                    <span>Laptop</span>
+                                    <img src="../assets/icons/smartwatch-pngrepo-com.png" alt="">
+                                    <span>Đồng hồ thông minh</span>
                                 </div>
                             </router-link>
                         </div>
@@ -38,8 +38,18 @@
                         <div>
                             <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
                                 <div class="custom-menu-item">
-                                    <img src="../assets/icons/smartwatch-pngrepo-com.png" alt="">
-                                    <span>Đồng hồ thông minh</span>
+                                    <img src="../assets/icons/laptop-pngrepo-com.png" alt="">
+                                    <span>Máy tính</span>
+                                </div>
+                            </router-link>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
+                                <div class="custom-menu-item">
+                                    <img src="../assets/icons/television-pngrepo-com.png" alt="">
+                                    <span>Ti vi</span>
                                 </div>
                             </router-link>
                         </div>
