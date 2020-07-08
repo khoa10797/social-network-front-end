@@ -8,7 +8,8 @@
                         <div>
                             <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
                                 <div class="custom-menu-item">
-                                    <span>Công nghệ thông tin</span>
+                                    <img src="../assets/icons/smartphone-pngrepo-com.png" alt="">
+                                    <span>Điện thoại</span>
                                 </div>
                             </router-link>
                         </div>
@@ -17,7 +18,48 @@
                         <div>
                             <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
                                 <div class="custom-menu-item">
-                                    <span>Khoa học</span>
+                                    <img src="../assets/icons/tablet-pngrepo-com.png" alt="">
+                                    <span>Máy tính bảng</span>
+                                </div>
+                            </router-link>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
+                                <div class="custom-menu-item">
+                                    <img src="../assets/icons/laptop-pngrepo-com.png" alt="">
+                                    <span>Laptop</span>
+                                </div>
+                            </router-link>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
+                                <div class="custom-menu-item">
+                                    <img src="../assets/icons/smartwatch-pngrepo-com.png" alt="">
+                                    <span>Đồng hồ thông minh</span>
+                                </div>
+                            </router-link>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
+                                <div class="custom-menu-item">
+                                    <img src="../assets/icons/camera-pngrepo-com.png" alt="">
+                                    <span>Máy ảnh</span>
+                                </div>
+                            </router-link>
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
+                                <div class="custom-menu-item">
+                                    <img src="../assets/icons/headphones-pngrepo-com.png" alt="">
+                                    <span>Loa - Tai nghe</span>
                                 </div>
                             </router-link>
                         </div>
@@ -218,8 +260,11 @@
 
 <style lang="scss" scoped>
     .container-list-post {
+        display: grid;
+        grid-template-columns: 250px 1fr;
         padding-top: 80px;
-        max-width: 680px;
+        max-width: 950px;
+        grid-column-gap: 20px;
     }
 
     .card-header-post {
@@ -259,15 +304,15 @@
     }
 
     .menu-topic {
-        position: absolute;
-        left: -200px;
 
         .menu-list {
             .custom-menu-item {
-                display: flex;
+                display: grid;
+                grid-template-columns: 30px 1fr;
+                grid-column-gap: 20px;
                 align-items: center;
                 height: 100%;
-                border-radius: 10px;
+                border-radius: 5px;
                 padding: 0 10px;
 
                 span {
@@ -276,20 +321,23 @@
             }
 
             li {
-                > div {
-                    height: 50px;
 
-                    :hover {
-                        cursor: pointer;
-                        background-color: #e4e6eb;
-                    }
+                > div {
+
+                    padding: 10px 0;
+
+                }
+
+                :hover {
+                    cursor: pointer;
+                    background-color: #e4e6eb;
                 }
             }
 
             a {
                 padding: unset;
                 height: 100%;
-                border-radius: 10px;
+                border-radius: 5px;
             }
         }
     }

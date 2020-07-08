@@ -29,13 +29,13 @@
     }
 
     .is-36x36 {
-        width: 36px;
-        height: 36px;
+        width: 36px !important;
+        height: 36px !important;
     }
 
     .is-40x40 {
-        width: 40px;
-        height: 40px;
+        width: 40px !important;
+        height: 40px !important;
     }
 
     .icon-send {

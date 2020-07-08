@@ -473,6 +473,12 @@
         :hover {
             cursor: pointer;
         }
+
+        img {
+            margin: 0 auto;
+            display: block;
+        }
+
     }
 </style>
 
