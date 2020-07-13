@@ -6,6 +6,7 @@ import User from "../views/User";
 import Topic from "../views/Topic";
 import PostDetail from "../views/PostDetail";
 import Search from "../views/Search";
+import Admin from "../views/Admin";
 
 Vue.use(VueRouter);
 
@@ -14,6 +15,11 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
+    },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: Admin
     },
     {
         path: '/login',
