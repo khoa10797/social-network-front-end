@@ -20,12 +20,29 @@
                     <p>{{viewedUser.description}}</p>
                 </div>
 
+                <div>
+                    <button v-if="user.user_id !== viewedUser.user_id" class="button is-primary" @click="followUser">
+                        <div v-if="viewedUser.user_status === 'follow'">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                            <span>Đã theo dõi</span>
+                        </div>
+                        <div v-else>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-plus-square"></i>
+                                    </span>
+                            <span>Theo dõi</span>
+                        </div>
+                    </button>
+                </div>
+
                 <div class="navbar-menu-user">
                     <b-tabs v-model="activeTab">
                         <b-tab-item label="Dòng thời gian">
                         </b-tab-item>
 
-                        <b-tab-item label="Giới thiệu">
+                        <b-tab-item label="Đang theo dõi">
                         </b-tab-item>
 
                         <b-tab-item label="Bài viết">
@@ -40,7 +57,22 @@
                 </div>
 
                 <div v-if="activeTab === 1">
-                    <h1 class="title is-1">Giới thiệu</h1>
+                    <div class="card custom-card container-follower">
+                        <div v-for="follower in followers" :key="follower.user_id">
+                            <div class="follower">
+                                <div>
+                                    <figure class="image">
+                                        <img :src="follower.avatar" alt="">
+                                    </figure>
+                                    <router-link :to="{path: 'user', query: {userId: follower.user_id}}">
+                                        <p class="has-text-black is-text-decoration-line">
+                                            <b>{{follower.name}}</b>
+                                        </p>
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div v-if="activeTab === 2">
@@ -68,12 +100,16 @@
         data() {
             return {
                 viewedUser: Object,
-                activeTab: 0
+                activeTab: 0,
+                followers: []
             }
         },
         computed: {
             posts() {
                 return this.$store.state.posts;
+            },
+            user() {
+                return this.$store.state.user;
             }
         },
         mounted() {
@@ -88,6 +124,27 @@
             getPostByUser: async function () {
                 await this.getUser();
                 await this.$store.dispatch('getPostByUserIdAction', this.viewedUser.user_id);
+            },
+            followUser: async function () {
+                debugger
+                let userStatus = '';
+                let updatedNumberFollow = 0;
+                if (this.viewedUser.user_status === 'follow') {
+                    userStatus = 'unfollow';
+                    updatedNumberFollow = -1;
+                } else {
+                    userStatus = 'follow';
+                    updatedNumberFollow = 1;
+                }
+
+                await UserService.followUser({
+                    'user_id': this.$store.state.user.user_id,
+                    'followed_user_id': this.viewedUser.user_id,
+                    'user_status': userStatus
+                });
+
+                this.viewedUser.number_follow += updatedNumberFollow;
+                this.viewedUser.user_status = userStatus;
             },
         }
     }
@@ -117,6 +174,46 @@
 
     .user-description {
         margin-top: 20px;
+    }
+
+    .container-follower {
+        display: flex;
+        flex-wrap: wrap;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        .follower {
+            height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 2px #0000001a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+
+            > div {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                span {
+                    font-weight: 700;
+                    color: #0a0a0a !important
+                }
+            }
+
+            figure {
+                width: 80px;
+                height: 80px;
+                margin-right: 20px;
+            }
+        }
+
+        > div {
+            height: 110px;
+            width: 50%;
+            padding: 5px;
+        }
     }
 </style>
 

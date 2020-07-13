@@ -8,4 +8,9 @@ export const getById = async (userId) => {
 export const login = async (userRequest) => {
     let response = await baseRequest.post('/user/login', userRequest);
     return response.data;
-}
+};
+
+export const followUser = async (userFollow) => {
+    let response = await baseRequest.put(`/user/follow`, userFollow);
+    return response.data;
+};
