@@ -4,9 +4,6 @@
             <b-menu-list label="Chủ đề">
                 <b-menu-item icon="information-outline" label="Chủ đề" :active="true"></b-menu-item>
             </b-menu-list>
-            <b-menu-list label="Người dùng">
-                <b-menu-item label="Người dùng"></b-menu-item>
-            </b-menu-list>
         </b-menu>
 
         <div class="container container-content">
@@ -14,28 +11,6 @@
                 <h1 class="title">Danh sách chủ đề</h1>
                 <b-button type="is-success" @click="isShowAddTopicModal = true">Thêm chủ đề</b-button>
             </div>
-
-            <!--<section>
-                <b-table :data="topics">
-                    <template slot-scope="props">
-                        <template v-for="column in columns">
-                            <b-table-column :key="column.topic_id" v-bind="column">
-                                <template
-                                        v-if="column.searchable && !column.numeric"
-                                        slot="searchable"
-                                        slot-scope="props">
-                                    <b-input
-                                            v-model="props.filters[props.column.field]"
-                                            placeholder="Tìm kiếm..."
-                                            icon="magnify"
-                                            size="is-small"/>
-                                </template>
-                                {{ props.row[column.field] }}
-                            </b-table-column>
-                        </template>
-                    </template>
-                </b-table>
-            </section>-->
 
             <b-table
                     :data="topics"
