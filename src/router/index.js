@@ -7,6 +7,7 @@ import Topic from "../views/Topic";
 import PostDetail from "../views/PostDetail";
 import Search from "../views/Search";
 import Admin from "../views/Admin";
+import SignUp from "../views/SignUp";
 
 Vue.use(VueRouter);
 
@@ -25,6 +26,11 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: Login
+    },
+    {
+        path: '/sign_up',
+        name: 'SignUp',
+        component: SignUp,
     },
     {
         path: '/user',

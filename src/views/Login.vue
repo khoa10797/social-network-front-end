@@ -33,8 +33,9 @@
                         </div>
                     </div>
                     <p class="has-text-grey">
-                        <a href="../">Đăng kí</a> &nbsp;·&nbsp;
-                        <a href="../">Quên mật khẩu</a> &nbsp;·&nbsp;
+                        <router-link :to="{path: 'sign_up', query: {}}">
+                            Đăng kí
+                        </router-link> &nbsp;·&nbsp;
                         <a href="../">Trợ giúp</a>
                     </p>
                 </div>
