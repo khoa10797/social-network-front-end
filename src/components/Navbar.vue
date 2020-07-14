@@ -41,6 +41,14 @@
             </template>
 
             <template slot="end">
+                <b-navbar-item v-if="user == null" class="custom-navbar-item" tag="div">
+                    <div class="logout" @click="login">
+                        <div>
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                    </div>
+                </b-navbar-item>
+
                 <b-navbar-item v-if="user != null" class="custom-navbar-item" tag="div">
                     <router-link :to="{path: 'user', query: {userId: user.user_id}}">
                         <div class="btn-user-right">
@@ -60,6 +68,11 @@
                         </div>
                         <div v-if="numberNoti > 0" class="number-noti">
                             {{numberNoti}}
+                        </div>
+                    </div>
+                    <div class="logout" @click="logout">
+                        <div>
+                            <i class="fas fa-sign-out-alt"></i>
                         </div>
                     </div>
                 </b-navbar-item>
@@ -231,7 +244,16 @@
                     this.isFetching = false;
                 });
 
-            }, 500)
+            }, 500),
+            logout: function () {
+                this.$router.push({path: '/login'}).then(response => {
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("access_token");
+                })
+            },
+            login: function () {
+                this.$router.push({path: '/login'});
+            }
         }
     };
 </script>
@@ -374,6 +396,16 @@
         font-size: .9375rem;
     }
 
+    .logout {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #e4e6eb;
+        margin-left: 10px;
+    }
 </style>
 
 <style lang="scss">

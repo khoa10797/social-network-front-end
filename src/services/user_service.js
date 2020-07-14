@@ -14,3 +14,8 @@ export const followUser = async (userFollow) => {
     let response = await baseRequest.put(`/user/follow`, userFollow);
     return response.data;
 };
+
+export const getFollower = async (userId) => {
+    let response = await baseRequest.get(`/user/follower/${userId}`);
+    return response.data;
+}

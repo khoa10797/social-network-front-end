@@ -114,6 +114,7 @@
         },
         mounted() {
             this.getPostByUser();
+            this.getFollower();
         },
         methods: {
             getUser: async function () {
@@ -124,6 +125,11 @@
             getPostByUser: async function () {
                 await this.getUser();
                 await this.$store.dispatch('getPostByUserIdAction', this.viewedUser.user_id);
+            },
+            getFollower: async function () {
+                let userId = this.$props.query.userId;
+                let response = await UserService.getFollower(userId);
+                this.followers = response.data;
             },
             followUser: async function () {
                 debugger
