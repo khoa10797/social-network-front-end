@@ -28,4 +28,9 @@ export const add = async (topic) => {
 export const remove = async (topicId) => {
     let response = await baseRequest.delete(`/topic/${topicId}`);
     return response.data;
-}
+};
+
+export const getByUserFollow = async (userId) => {
+    let response = await baseRequest.get(`/topic/user/${userId}`);
+    return response.data;
+};

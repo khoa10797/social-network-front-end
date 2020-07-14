@@ -64,4 +64,9 @@ export const searchByFilter = async (postFilter) => {
 
     let response = await baseRequest.get(`/post/filter?${query}`);
     return response.data;
-}
+};
+
+export const countByUserOwner = async (userOwnerId) => {
+    let response = await baseRequest.get(`/post/count_by_user/${userOwnerId}`);
+    return response.data;
+};

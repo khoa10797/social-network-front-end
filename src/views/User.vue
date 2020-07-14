@@ -20,8 +20,9 @@
                     <p>{{viewedUser.description}}</p>
                 </div>
 
-                <div>
-                    <button v-if="user.user_id !== viewedUser.user_id" class="button is-primary" @click="followUser">
+                <div class="menu-header">
+                    <button v-if="user.user_id !== viewedUser.user_id" class="button is-primary is-small is-rounded"
+                            @click="followUser">
                         <div v-if="viewedUser.user_status === 'follow'">
                                     <span class="icon is-small">
                                         <i class="fas fa-check"></i>
@@ -35,6 +36,14 @@
                             <span>Theo dõi</span>
                         </div>
                     </button>
+
+                    <div class="topic-info-header">
+                        <span>{{numberPost}} bài viết</span>
+                    </div>
+
+                    <div class="topic-info-header">
+                        <span>2 người theo dõi</span>
+                    </div>
                 </div>
 
                 <div class="navbar-menu-user">
@@ -42,10 +51,10 @@
                         <b-tab-item label="Dòng thời gian">
                         </b-tab-item>
 
-                        <b-tab-item label="Đang theo dõi">
+                        <b-tab-item label="Theo dõi người dùng">
                         </b-tab-item>
 
-                        <b-tab-item label="Bài viết">
+                        <b-tab-item label="Theo dõi chủ đề">
                         </b-tab-item>
                     </b-tabs>
                 </div>
@@ -76,7 +85,22 @@
                 </div>
 
                 <div v-if="activeTab === 2">
-                    <h1 class="title is-1">Bài viết</h1>
+                    <div class="card custom-card container-follower">
+                        <div v-for="topic in topics" :key="topic.topic_id">
+                            <div class="follower">
+                                <div>
+                                    <figure class="image">
+                                        <img :src="topic.avatar" alt="">
+                                    </figure>
+                                    <router-link :to="{path: 'topic', query: {topicId: topic.topic_id}}">
+                                        <p class="has-text-black is-text-decoration-line">
+                                            <b>{{topic.name}}</b>
+                                        </p>
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,6 +111,8 @@
     import Navbar from "../components/Navbar";
     import Post from "../components/Post";
     import * as UserService from "../services/user_service";
+    import * as TopicService from "../services/topic_service";
+    import * as PostService from "../services/post_service";
 
     export default {
         name: "User",
@@ -101,7 +127,9 @@
             return {
                 viewedUser: Object,
                 activeTab: 0,
-                followers: []
+                followers: [],
+                topics: [],
+                numberPost: null
             }
         },
         computed: {
@@ -113,8 +141,12 @@
             }
         },
         mounted() {
-            this.getPostByUser();
-            this.getFollower();
+            this.getUser().then(user => {
+                this.getPostByUser();
+                this.getFollower();
+                this.countNumberPost();
+                this.getTopicFollow();
+            })
         },
         methods: {
             getUser: async function () {
@@ -123,16 +155,24 @@
                 this.viewedUser = response.data;
             },
             getPostByUser: async function () {
-                await this.getUser();
                 await this.$store.dispatch('getPostByUserIdAction', this.viewedUser.user_id);
             },
             getFollower: async function () {
-                let userId = this.$props.query.userId;
+                let userId = this.viewedUser.user_id;
                 let response = await UserService.getFollower(userId);
                 this.followers = response.data;
             },
+            getTopicFollow: async function () {
+                let userId = this.viewedUser.user_id;
+                let response = await TopicService.getByUserFollow(userId);
+                this.topics = response.data;
+            },
+            countNumberPost: async function () {
+                let userId = this.viewedUser.user_id;
+                let response = await PostService.countByUserOwner(userId);
+                this.numberPost = response.data;
+            },
             followUser: async function () {
-                debugger
                 let userStatus = '';
                 let updatedNumberFollow = 0;
                 if (this.viewedUser.user_status === 'follow') {
@@ -219,6 +259,20 @@
             height: 110px;
             width: 50%;
             padding: 5px;
+        }
+    }
+
+    .menu-header {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+
+        .topic-info-header {
+            margin-left: 20px;
+
+            span {
+                font-weight: 500;
+            }
         }
     }
 </style>
