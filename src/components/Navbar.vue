@@ -266,7 +266,6 @@
                 keywordArray.forEach(item => {
                     if (content.indexOf(item) >= 0) {
                         markupKeyword = item;
-                        return;
                     }
                 });
 

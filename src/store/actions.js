@@ -9,7 +9,7 @@ export const setUserAction = async ({commit}, user) => {
 };
 
 export const getPostByUserIdAction = async ({commit}, userId) => {
-    let response = await PostService.getByUser(userId);
+    let response = await PostService.getSuggestPost();
     commit('SET_POSTS', response.data);
 };
 

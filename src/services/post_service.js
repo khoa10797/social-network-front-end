@@ -80,3 +80,8 @@ export const getBookmarkPost = async (userId) => {
     let response = await baseRequest.get(`/post/bookmark/user/${userId}`);
     return response.data;
 };
+
+export const getSuggestPost = async () => {
+    let response = await baseRequest.get('/post/suggest');
+    return response.data;
+}
