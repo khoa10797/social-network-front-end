@@ -22,7 +22,7 @@
 
                     <div class="menu-header">
                         <div class="topic-info-header">
-                            <span>100 bài viết</span>
+                            <span>{{topic.number_post}} bài viết</span>
                         </div>
                         <div class="topic-info-header">
                             <span>{{topic.number_follow}} người theo dõi</span>

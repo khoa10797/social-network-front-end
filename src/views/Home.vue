@@ -103,17 +103,25 @@
                     <h1>Bạn đang nghĩ gì</h1>
                 </div>
                 <div class="card-content">
-                    <div class="is-flex">
-                        <div>
-                            <figure class="image is-40x40">
-                                <router-link to="/">
-                                    <img v-if="user != null" class="is-rounded" :src="user.avatar" alt=""/>
-                                    <img v-else class="is-rounded" :src="DEFAULT_AVATAR" alt=""/>
-                                </router-link>
-                            </figure>
+                    <div class="is-flex" style="justify-content: space-between">
+                        <div class="is-flex">
+                            <div>
+                                <figure class="image is-40x40">
+                                    <router-link to="/">
+                                        <img v-if="user != null" class="is-rounded" :src="user.avatar" alt=""/>
+                                        <img v-else class="is-rounded" :src="DEFAULT_AVATAR" alt=""/>
+                                    </router-link>
+                                </figure>
+                            </div>
+                            <div class="align-item-center">
+                                <span v-if="user != null"><b>{{user.name}}</b></span>
+                            </div>
                         </div>
-                        <div class="align-item-center">
-                            <span v-if="user != null"><b>{{user.name}}</b></span>
+
+                        <div class="choose-topic">
+                            <b-select placeholder="Chọn chủ đề" size="is-small" v-model="topicId" rounded>
+                                <option value="5ec3f62112c8d847d47a2acf">Điện thoại</option>
+                            </b-select>
                         </div>
                     </div>
 
@@ -193,7 +201,8 @@
                 editor: BalloonEditor,
                 editorConfig: {
                     placeholder: 'Nhập nội dung...'
-                }
+                },
+                topicId: ''
             }
         },
         computed: {
@@ -218,7 +227,10 @@
             },
             sendPost: async function () {
                 if (this.postContent.length > 0) {
+                    console.log(this.topicId)
+                    debugger
                     await this.$store.dispatch('addPostAction', {
+                        'topic_id': this.topicId,
                         'user_owner_id': this.$store.state.user.user_id,
                         'title': this.postTitle,
                         'content': this.postContent,
@@ -350,6 +362,12 @@
                 border-radius: 5px;
             }
         }
+    }
+
+    .choose-topic {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 </style>
 
