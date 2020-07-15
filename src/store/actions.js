@@ -154,4 +154,13 @@ export const getPostByTopicIdAction = async ({commit}, topicId) => {
 export const setPostAction = async ({commit}, post) => {
     let posts = [post];
     commit('SET_POSTS', posts);
-}
+};
+
+export const bookmarkPostAction = async ({commit, state}, userPost) => {
+    let userPostResponse = (await PostService.bookmarkPost(userPost)).data;
+    let postId = userPostResponse.post_id;
+    let post = state.posts.find(it => it.post_id === postId);
+    post.bookmark = userPostResponse.bookmark;
+
+    commit('UPDATE_POST', {postId: postId, post: post});
+};

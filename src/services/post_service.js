@@ -70,3 +70,13 @@ export const countByUserOwner = async (userOwnerId) => {
     let response = await baseRequest.get(`/post/count_by_user/${userOwnerId}`);
     return response.data;
 };
+
+export const bookmarkPost = async (userPost) => {
+    let response = await baseRequest.post('/post/bookmark', userPost);
+    return response.data;
+}
+
+export const getBookmarkPost = async (userId) => {
+    let response = await baseRequest.get(`/post/bookmark/user/${userId}`);
+    return response.data;
+};

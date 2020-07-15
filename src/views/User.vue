@@ -48,13 +48,16 @@
 
                 <div class="navbar-menu-user">
                     <b-tabs v-model="activeTab">
-                        <b-tab-item label="Dòng thời gian">
+                        <b-tab-item label="Bài viết">
                         </b-tab-item>
 
-                        <b-tab-item label="Theo dõi người dùng">
+                        <b-tab-item label="Người dùng">
                         </b-tab-item>
 
-                        <b-tab-item label="Theo dõi chủ đề">
+                        <b-tab-item label="Chủ đề">
+                        </b-tab-item>
+
+                        <b-tab-item v-if="user.user_id === viewedUser.user_id" label="Đã lưu" @click="getBookmarkPost">
                         </b-tab-item>
                     </b-tabs>
                 </div>
@@ -102,6 +105,10 @@
                         </div>
                     </div>
                 </div>
+
+                <div v-if="activeTab === 3">
+                    <Post v-for="post in bookmarkPosts" :key="post.post_id" :post="post"/>
+                </div>
             </div>
         </div>
     </div>
@@ -113,6 +120,7 @@
     import * as UserService from "../services/user_service";
     import * as TopicService from "../services/topic_service";
     import * as PostService from "../services/post_service";
+    import {bookmarkPost} from "../services/post_service";
 
     export default {
         name: "User",
@@ -129,7 +137,8 @@
                 activeTab: 0,
                 followers: [],
                 topics: [],
-                numberPost: null
+                numberPost: null,
+                bookmarkPosts: []
             }
         },
         computed: {
@@ -146,6 +155,7 @@
                 this.getFollower();
                 this.countNumberPost();
                 this.getTopicFollow();
+                this.getBookmarkPost();
             })
         },
         methods: {
@@ -192,6 +202,15 @@
                 this.viewedUser.number_follow += updatedNumberFollow;
                 this.viewedUser.user_status = userStatus;
             },
+            getBookmarkPost: async function () {
+                if (this.user.user_id !== this.viewedUser.user_id) {
+                    return;
+                }
+
+                let response = await PostService.getBookmarkPost(this.user.user_id);
+                this.bookmarkPosts = response.data;
+                debugger
+            }
         }
     }
 </script>

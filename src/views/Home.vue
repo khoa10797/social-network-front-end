@@ -209,12 +209,14 @@
         },
         methods: {
             getPostByUser: async function () {
-                let user = JSON.parse(localStorage.getItem('user'));
+                /*let user = JSON.parse(localStorage.getItem('user'));
                 if (user === null) {
                     await this.$store.dispatch('getTrendingPostAction');
                 } else {
                     await this.$store.dispatch('getPostByUserIdAction', this.user.user_id);
-                }
+                }*/
+
+                await this.$store.dispatch('getTrendingPostAction');
             },
             sendPost: async function () {
                 if (this.postContent.length > 0) {

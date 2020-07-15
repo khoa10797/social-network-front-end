@@ -5,16 +5,23 @@
 
         <div v-if="showMenuPost" class="menu-post">
             <ul class="menu-list">
-                <li>
+                <li v-if="user.user_id === post.user_owner.user_id">
                     <a @click="confirmDeletePostDialog">
                         <i class="far fa-trash-alt"></i>
                         <span>Xóa bài</span>
                     </a>
                 </li>
-                <li @click="showUpdatePost">
+                <li v-if="user.user_id === post.user_owner.user_id" @click="showUpdatePost">
                     <a>
                         <i class="far fa-edit"></i>
                         <span>Chỉnh sửa</span>
+                    </a>
+                </li>
+                <li v-if="user.user_id !== post.user_owner.user_id">
+                    <a @click="bookmarkPost">
+                        <i class="far fa-bookmark"></i>
+                        <span v-if="post.bookmark !== true">Lưu bài viết</span>
+                        <span v-else>Bỏ lưu bài viết</span>
                     </a>
                 </li>
             </ul>
@@ -203,6 +210,7 @@
         },
         data() {
             return {
+                user: Object,
                 valueComment: '',
                 showMenuPost: false,
                 showInputComment: false,
@@ -351,6 +359,23 @@
             },
             showLightBox() {
                 this.$refs.lightbox.showImage(0)
+            },
+            getUser: function () {
+                this.user = this.$store.state.user;
+            },
+            bookmarkPost: async function () {
+                let bookmark = true;
+                if (this.post.bookmark === true) {
+                    bookmark = false;
+                }
+
+                await this.$store.dispatch('bookmarkPostAction', {
+                    'user_id': this.user.user_id,
+                    'post_id': this.post.post_id,
+                    'bookmark': bookmark
+                });
+
+                this.showMenuPost = false;
             }
         },
         computed: {
@@ -363,6 +388,7 @@
             }
         },
         mounted() {
+            this.getUser();
             this.postContent = this.post.content;
             this.post.images.forEach(item => {
                 this.lightBoxMedia.push({thumb: item, src: item});
