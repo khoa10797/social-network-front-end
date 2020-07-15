@@ -27,12 +27,12 @@
                     <template slot="empty">Không có kết quả nào</template>
 
                     <template slot-scope="props">
-                        <div class="media">
+                        <div class="media" @click="redirectToPost(props.option.post_id)">
                             <div class="media-left">
                                 <img v-if="props.option.images.length > 0" :src="props.option.images[0]" alt="">
                                 <i v-else class="fas fa-images"></i>
                             </div>
-                            <div class="media-content" v-html="props.option.content">
+                            <div class="media-content" v-html="genHtmlSearchResult(keyWord, props.option.content)">
 
                             </div>
                         </div>
@@ -244,7 +244,7 @@
                     this.isFetching = false;
                 });
 
-            }, 500),
+            }, 1000),
             logout: function () {
                 this.$router.push({path: '/login'}).then(response => {
                     localStorage.removeItem("user");
@@ -253,6 +253,29 @@
             },
             login: function () {
                 this.$router.push({path: '/login'});
+            },
+            redirectToPost: async function (postId) {
+                await this.$router.push({path: 'post', query: {postId: postId}});
+            },
+            genHtmlSearchResult: function (keyword, html) {
+                debugger
+                let markupKeyword = '';
+                let rawContent = html.replace(/(<([^>]+)>)/ig, '').split(/[\s,.]+/);
+                let content = html.replace(/(<([^>]+)>)/ig, '').toLowerCase().split(/[\s,.]+/);
+                let keywordArray = keyword.toLowerCase().split(/\s/);
+                keywordArray.forEach(item => {
+                    if (content.indexOf(item) >= 0) {
+                        markupKeyword = item;
+                        return;
+                    }
+                });
+
+                let index = content.indexOf(markupKeyword);
+                rawContent[index] = `<b>${rawContent[index]}</b>`;
+
+                let startIndex = index - 3 < 0 ? 0 : index - 3;
+                let rawText = rawContent.splice(startIndex, index + 3).join(' ');
+                return '<p>... ' + rawText + '...</p>';
             }
         }
     };
@@ -416,7 +439,7 @@
             align-items: center;
 
             .control {
-                width: 300px;
+                width: 400px;
             }
         }
     }

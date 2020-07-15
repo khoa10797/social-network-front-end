@@ -27,9 +27,11 @@
                     </div>
 
                     <div v-if="showActionComment === true" class="action-comment-right">
-                        <i @click="switchOpenMenuComment" class="fas fa-ellipsis-h"></i>
+                        <i v-if="user.user_id === comment.user_owner_id" @click="switchOpenMenuComment"
+                           class="fas fa-ellipsis-h"></i>
 
-                        <div v-if="showMenuComment" class="menu-comment">
+                        <div v-if="showMenuComment === true"
+                             class="menu-comment">
                             <ul class="menu-list">
                                 <li>
                                     <a @click="deleteComment"><span>Xóa bình luận</span></a>

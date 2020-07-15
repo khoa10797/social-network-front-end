@@ -209,7 +209,6 @@
 
                 let response = await PostService.getBookmarkPost(this.user.user_id);
                 this.bookmarkPosts = response.data;
-                debugger
             }
         }
     }
