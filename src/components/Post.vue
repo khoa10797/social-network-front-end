@@ -80,7 +80,7 @@
                     </button>
                 </div>
 
-                <div>
+                <!--<div>
                     <button class="button is-white">
                         <svg width="24px" height="24px" viewBox="0 0 24 24">
                             <g id="downvote" class="icon_svg-stroke icon_svg-fill" stroke="#666" fill="none"
@@ -91,7 +91,7 @@
                             </g>
                         </svg>
                     </button>
-                </div>
+                </div>-->
             </div>
         </div>
 
@@ -195,6 +195,7 @@
     import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
     import firebase from "firebase";
     import LightBox from "vue-image-lightbox";
+    import {Constant} from "../commons/constant";
 
     export default {
         name: "Post",
@@ -219,6 +220,7 @@
                 showEditPostModal: false,
                 imagePreviewUrl: null,
                 imageName: '',
+                DEFAULT_AVATAR: Constant.DEFAULT_AVATAR,
                 editor: BalloonEditor,
                 editorConfig: {
                     placeholder: 'Viết bình luận...'

@@ -42,6 +42,21 @@
                                     <span>Theo dõi</span>
                                 </div>
                             </button>
+                            <button v-if="roleUser === 'ADMIN'" class="button is-danger"
+                                    style="margin-left: 10px" @click="lockTopic">
+                                <div v-if="isLockTopic">
+                                    <span class="icon is-small">
+                                        <i class="fas fa-lock-open"></i>
+                                    </span>
+                                    <span>Mở khóa</span>
+                                </div>
+                                <div v-else>
+                                    <span class="icon is-small">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <span>Khóa</span>
+                                </div>
+                            </button>
                         </div>
                     </div>
 
@@ -103,25 +118,36 @@
             return {
                 activeTab: 0,
                 topic: Object,
-                followers: []
+                roleUser: '',
+                followers: [],
+                isLockTopic: null
             }
         },
         computed: {
             posts() {
                 return this.$store.state.posts;
+            },
+            user() {
+                return this.$store.state.user;
             }
         },
         mounted() {
-            this.getPostByTopic();
+            this.getTopic().then(topic => {
+                this.getPostByTopic();
+                this.getRoleUser();
+                this.getLock()
+            });
         },
         methods: {
+            getRoleUser: function () {
+                this.roleUser = this.user.role_group_ids[0];
+            },
             getTopic: async function () {
                 let topicId = this.$props.query.topicId;
                 let response = await TopicService.getById(topicId);
                 this.topic = response.data;
             },
             getPostByTopic: async function () {
-                await this.getTopic();
                 await this.$store.dispatch('getPostByTopicIdAction', this.topic.topic_id);
             },
             updateUserStatus: async function () {
@@ -149,6 +175,20 @@
                     let response = await TopicService.getFollowerByTopicId(this.topic.topic_id);
                     this.followers = response.data;
                 }
+            },
+            getLock: function () {
+                this.isLockTopic = this.topic.lock;
+            },
+            lockTopic: async function () {
+                let lock = true;
+                if (this.isLockTopic)
+                    lock = false
+
+                await TopicService.lockTopic({
+                    topicId: this.topic.topic_id,
+                    lock: lock
+                });
+                this.isLockTopic = lock
             }
         }
     }

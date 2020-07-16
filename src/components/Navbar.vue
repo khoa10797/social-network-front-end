@@ -244,7 +244,7 @@
                     this.isFetching = false;
                 });
 
-            }, 1000),
+            }, 500),
             logout: function () {
                 this.$router.push({path: '/login'}).then(response => {
                     localStorage.removeItem("user");

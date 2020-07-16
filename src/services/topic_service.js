@@ -34,3 +34,8 @@ export const getByUserFollow = async (userId) => {
     let response = await baseRequest.get(`/topic/user/${userId}`);
     return response.data;
 };
+
+export const lockTopic = async ({topicId, lock}) => {
+    let response = await baseRequest.put(`/topic/lock/${topicId}?lock=${lock}`);
+    return response.data;
+};

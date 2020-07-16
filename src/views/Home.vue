@@ -78,7 +78,7 @@
             </div>
 
             <div>
-                <div class="custom-card card-header-post">
+                <div v-if="user != null" class="custom-card card-header-post">
                     <div>
                         <figure class="image is-40x40">
                             <router-link to="/">
@@ -120,7 +120,9 @@
 
                         <div class="choose-topic">
                             <b-select placeholder="Chọn chủ đề" size="is-small" v-model="topicId" rounded>
-                                <option value="5ec3f62112c8d847d47a2acf">Điện thoại</option>
+                                <option v-for="item in chooseTopic" :value="item.topic_id" >
+                                    {{item.name}}
+                                </option>
                             </b-select>
                         </div>
                     </div>
@@ -180,6 +182,7 @@
     import {Constant} from "../commons/constant";
     import CKEditor from "@ckeditor/ckeditor5-vue";
     import BalloonEditor from "@ckeditor/ckeditor5-build-balloon";
+    import * as TopicService from "../services/topic_service";
 
     export default {
         name: "Home",
@@ -202,7 +205,8 @@
                 editorConfig: {
                     placeholder: 'Nhập nội dung...'
                 },
-                topicId: ''
+                topicId: '',
+                chooseTopic: []
             }
         },
         computed: {
@@ -214,7 +218,9 @@
             }
         },
         mounted() {
-            this.getPostByUser();
+            this.getPostByUser().then(user => {
+                this.getTopic();
+            })
         },
         methods: {
             getPostByUser: async function () {
@@ -222,7 +228,7 @@
                 if (user === null) {
                     await this.$store.dispatch('getTrendingPostAction');
                 } else {
-                    await this.$store.dispatch('getPostByUserIdAction', this.user.user_id);
+                    await this.$store.dispatch('getSuggestPost', {});
                 }
             },
             sendPost: async function () {
@@ -275,6 +281,9 @@
                 }).catch(function (error) {
                     console.log(error)
                 });
+            },
+            getTopic: async function () {
+                this.chooseTopic = (await TopicService.getAll()).data;
             }
         }
     };
