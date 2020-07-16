@@ -161,6 +161,7 @@ export const setPostAction = async ({commit}, post) => {
     commit('SET_POSTS', posts);
 };
 
+/*
 export const bookmarkPostAction = async ({commit, state}, userPost) => {
     let userPostResponse = (await PostService.bookmarkPost(userPost)).data;
     let postId = userPostResponse.post_id;
@@ -168,4 +169,4 @@ export const bookmarkPostAction = async ({commit, state}, userPost) => {
     post.bookmark = userPostResponse.bookmark;
 
     commit('UPDATE_POST', {postId: postId, post: post});
-};
+};*/

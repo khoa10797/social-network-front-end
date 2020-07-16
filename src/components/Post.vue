@@ -20,8 +20,8 @@
                 <li v-if="user.user_id !== post.user_owner.user_id">
                     <a @click="bookmarkPost">
                         <i class="far fa-bookmark"></i>
-                        <span v-if="post.bookmark !== true">Lưu bài viết</span>
-                        <span v-else>Bỏ lưu bài viết</span>
+                        <span v-if="isBookmarkPost">Bỏ lưu bài viết</span>
+                        <span v-else>Lưu bài viết</span>
                     </a>
                 </li>
             </ul>
@@ -196,6 +196,7 @@
     import firebase from "firebase";
     import LightBox from "vue-image-lightbox";
     import {Constant} from "../commons/constant";
+    import * as PostService from '../services/post_service';
 
     export default {
         name: "Post",
@@ -226,7 +227,8 @@
                     placeholder: 'Viết bình luận...'
                 },
                 lightBoxMedia: [],
-                isShowLightBox: false
+                isShowLightBox: false,
+                isBookmarkPost: false
             }
         },
         methods: {
@@ -371,13 +373,14 @@
                     bookmark = false;
                 }
 
-                await this.$store.dispatch('bookmarkPostAction', {
+                await PostService.bookmarkPost({
                     'user_id': this.user.user_id,
                     'post_id': this.post.post_id,
                     'bookmark': bookmark
                 });
 
                 this.showMenuPost = false;
+                this.isBookmarkPost = bookmark;
             }
         },
         computed: {
@@ -391,6 +394,7 @@
         },
         mounted() {
             this.getUser();
+            this.isBookmarkPost = this.post.bookmark;
             this.postContent = this.post.content;
             this.post.images.forEach(item => {
                 this.lightBoxMedia.push({thumb: item, src: item});

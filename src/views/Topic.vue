@@ -12,7 +12,9 @@
                 </div>
                 <div class="card card-header-topic">
                     <div>
-                        <h1 class="title title-topic">{{topic.name}}</h1>
+                        <h1 class="title title-topic">{{topic.name}}
+                            <span v-if="isLockTopic" style="font-size: 1rem;color: red;">(Đã bị khóa)</span>
+                        </h1>
                         <h6 class="subtitle is-6">{{topic.intro}}</h6>
                     </div>
 
