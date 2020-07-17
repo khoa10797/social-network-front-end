@@ -23,4 +23,10 @@ export const getFollower = async (userId) => {
 export const add = async (user) => {
     let response = await baseRequest.post('/user', user);
     return response.data;
-}
+};
+
+export const update = async (user) => {
+    let response = await baseRequest.put('/user', user);
+    return response.data;
+};
+

@@ -34,7 +34,10 @@
                     </b-table-column>
 
                     <b-table-column field="" label="" centered>
-                        <i class="fas fa-trash-alt btn-remove-topic" @click="removeTopic(props.row.topic_id)"></i>
+                        <button class="button is-danger" @click="removeTopic(props.row.topic_id)">
+                            <i class="fas fa-trash-alt btn-remove-topic"></i>
+                            Xóa
+                        </button>
                     </b-table-column>
                 </template>
 
@@ -336,6 +339,6 @@
     }
 
     .btn-remove-topic {
-        color: red;
+        margin-right: 5px;
     }
 </style>

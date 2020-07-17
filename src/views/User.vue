@@ -17,7 +17,11 @@
                 </div>
 
                 <div class="user-description">
-                    <p>{{viewedUser.description}}</p>
+                    <p>
+                        <a v-if="user.user_id === viewedUser.user_id" @click="editUserDescription"
+                           class="far fa-edit"></a>
+                        {{userDescription}}
+                    </p>
                 </div>
 
                 <div class="menu-header">
@@ -111,6 +115,27 @@
                 </div>
             </div>
         </div>
+
+        <b-modal :active.sync="isShowEditDescriptionModal"
+                 has-modal-card
+                 trap-focus
+                 :destroy-on-hide="false"
+                 aria-role="dialog"
+                 aria-modal>
+
+            <div class="modal-card" style="width: 640px">
+                <header class="modal-card-head">
+                    <h1 style="font-size: 1.25rem;font-weight: 700;" class="title">Chỉnh sửa mô tả</h1>
+                </header>
+                <section class="modal-card-body">
+                    <b-input maxlength="200" type="textarea" v-model="userDescription"></b-input>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-primary" @click="updateUserDescription">Lưu</button>
+                    <button type="button" class="button" @click="isShowEditDescriptionModal = false">Thoát</button>
+                </footer>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -120,7 +145,6 @@
     import * as UserService from "../services/user_service";
     import * as TopicService from "../services/topic_service";
     import * as PostService from "../services/post_service";
-    import {bookmarkPost} from "../services/post_service";
 
     export default {
         name: "User",
@@ -138,7 +162,9 @@
                 followers: [],
                 topics: [],
                 numberPost: null,
-                bookmarkPosts: []
+                bookmarkPosts: [],
+                isShowEditDescriptionModal: false,
+                userDescription: ''
             }
         },
         computed: {
@@ -156,7 +182,9 @@
                 this.countNumberPost();
                 this.getTopicFollow();
                 this.getBookmarkPost();
-            })
+
+                this.userDescription = this.viewedUser.description;
+            });
         },
         methods: {
             getUser: async function () {
@@ -209,6 +237,25 @@
 
                 let response = await PostService.getBookmarkPost(this.user.user_id);
                 this.bookmarkPosts = response.data;
+            },
+            editUserDescription: function () {
+                this.isShowEditDescriptionModal = true;
+            },
+            updateUserDescription: async function () {
+                let response = await UserService.update({
+                    'user_id': this.user.user_id,
+                    'description': this.userDescription
+                });
+
+                let userResponse = response.data;
+                await this.updateStateUser(userResponse);
+                this.userDescription = userResponse.description;
+                this.isShowEditDescriptionModal = false;
+            },
+            updateStateUser: async function (user) {
+                await this.$store.dispatch('setUserAction', user);
+                localStorage.removeItem('user');
+                localStorage.setItem('user', JSON.stringify(user));
             }
         }
     }
