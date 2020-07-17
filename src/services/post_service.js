@@ -84,4 +84,9 @@ export const getBookmarkPost = async (userId) => {
 export const getSuggestPost = async () => {
     let response = await baseRequest.get('/post/suggest');
     return response.data;
+};
+
+export const lockPost = async ({postId, lock}) => {
+    let response = await baseRequest.put(`/post/lock/${postId}?lock=${lock}`);
+    return response.data;
 }
