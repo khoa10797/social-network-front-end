@@ -11,8 +11,21 @@
                     </div>
 
                     <div>
-                        <h1 class="title custom-title">{{viewedUser.name}}</h1>
-                        <h5 class="subtitle is-5">{{viewedUser.intro}}</h5>
+                        <div class="align-item-center">
+                            <a v-if="user.user_id === viewedUser.user_id" @click="isShowEditName = true"
+                               class="far fa-edit" style="margin-right: 10px"></a>
+                            <h1 class="title custom-title">
+                                {{userName}}
+                            </h1>
+                        </div>
+
+                        <div class="align-item-center">
+                            <a v-if="user.user_id === viewedUser.user_id" @click="isShowEditIntroModal = true"
+                               class="far fa-edit" style="margin-right: 10px"></a>
+                            <h5 class="subtitle is-5">
+                                {{userIntro}}
+                            </h5>
+                        </div>
                     </div>
                 </div>
 
@@ -136,6 +149,48 @@
                 </footer>
             </div>
         </b-modal>
+
+        <b-modal :active.sync="isShowEditIntroModal"
+                 has-modal-card
+                 trap-focus
+                 :destroy-on-hide="false"
+                 aria-role="dialog"
+                 aria-modal>
+
+            <div class="modal-card" style="width: 640px">
+                <header class="modal-card-head">
+                    <h1 style="font-size: 1.25rem;font-weight: 700;" class="title">Chỉnh sửa giới thiệu</h1>
+                </header>
+                <section class="modal-card-body">
+                    <b-input maxlength="200" type="textarea" v-model="userIntro"></b-input>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-primary" @click="updateUserIntro">Lưu</button>
+                    <button type="button" class="button" @click="isShowEditIntroModal = false">Thoát</button>
+                </footer>
+            </div>
+        </b-modal>
+
+        <b-modal :active.sync="isShowEditName"
+                 has-modal-card
+                 trap-focus
+                 :destroy-on-hide="false"
+                 aria-role="dialog"
+                 aria-modal>
+
+            <div class="modal-card" style="width: 640px">
+                <header class="modal-card-head">
+                    <h1 style="font-size: 1.25rem;font-weight: 700;" class="title">Chỉnh sửa tên hiển thị</h1>
+                </header>
+                <section class="modal-card-body">
+                    <b-input maxlength="200" type="textarea" v-model="userName"></b-input>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-primary" @click="updateUserName">Lưu</button>
+                    <button type="button" class="button" @click="isShowEditName = false">Thoát</button>
+                </footer>
+            </div>
+        </b-modal>
     </div>
 </template>
 
@@ -164,7 +219,11 @@
                 numberPost: null,
                 bookmarkPosts: [],
                 isShowEditDescriptionModal: false,
-                userDescription: ''
+                isShowEditIntroModal: false,
+                isShowEditName: false,
+                userDescription: '',
+                userIntro: '',
+                userName: ''
             }
         },
         computed: {
@@ -184,6 +243,8 @@
                 this.getBookmarkPost();
 
                 this.userDescription = this.viewedUser.description;
+                this.userIntro = this.viewedUser.intro;
+                this.userName = this.viewedUser.name;
             });
         },
         methods: {
@@ -251,6 +312,28 @@
                 await this.updateStateUser(userResponse);
                 this.userDescription = userResponse.description;
                 this.isShowEditDescriptionModal = false;
+            },
+            updateUserIntro: async function () {
+                let response = await UserService.update({
+                    'user_id': this.user.user_id,
+                    'intro': this.userIntro
+                });
+
+                let userResponse = response.data;
+                await this.updateStateUser(userResponse);
+                this.userIntro = userResponse.intro;
+                this.isShowEditIntroModal = false;
+            },
+            updateUserName: async function () {
+                let response = await UserService.update({
+                    'user_id': this.user.user_id,
+                    'name': this.userName
+                });
+
+                let userResponse = response.data;
+                await this.updateStateUser(userResponse);
+                this.userName = userResponse.name;
+                this.isShowEditName = false;
             },
             updateStateUser: async function (user) {
                 await this.$store.dispatch('setUserAction', user);
