@@ -30,3 +30,12 @@ export const update = async (user) => {
     return response.data;
 };
 
+export const getAll = async () => {
+    let response = await baseRequest.get('/user');
+    return response.data;
+};
+
+export const lockUser = async ({userId, active}) => {
+    let response = await baseRequest.put(`/user/active/${userId}?active=${active}`);
+    return response.data;
+};

@@ -1,118 +1,175 @@
 <template>
-    <div class="container-admin">
-        <b-menu class="menu-admin">
-            <b-menu-list label="Chủ đề">
-                <b-menu-item icon="information-outline" label="Chủ đề" :active="true"></b-menu-item>
-            </b-menu-list>
-        </b-menu>
+    <div>
+        <div class="container-admin" v-if="roleUser === 'ADMIN'">
+            <b-menu class="menu-admin">
+                <b-menu-list label="Chủ đề">
+                    <b-menu-item icon="information-outline" label="Chủ đề" :active="true"
+                                 @click="showTopic"></b-menu-item>
+                </b-menu-list>
+                <b-menu-list label="Người dùng">
+                    <b-menu-item icon="information-outline" label="Người dùng" @click="showUser"></b-menu-item>
+                </b-menu-list>
+            </b-menu>
 
-        <div class="container container-content">
-            <div class="header-topic">
-                <h1 class="title">Danh sách chủ đề</h1>
-                <b-button type="is-success" @click="isShowAddTopicModal = true">Thêm chủ đề</b-button>
+            <div v-if="isShowTopic" class="container container-content">
+                <div class="header-topic">
+                    <h1 class="title">Danh sách chủ đề</h1>
+                    <b-button type="is-success" @click="isShowAddTopicModal = true">Thêm chủ đề</b-button>
+                </div>
+
+                <b-table
+                        :data="topics"
+                        :mobile-cards="true">
+
+                    <template slot-scope="props">
+                        <b-table-column field="topic_id" label="ID">
+                            {{ props.row.topic_id }}
+                        </b-table-column>
+
+                        <b-table-column field="name" label="Tên chủ đề">
+                            {{ props.row.name }}
+                        </b-table-column>
+
+                        <b-table-column field="number_post" label="Số bài đăng" centered>
+                            {{ props.row.number_post }}
+                        </b-table-column>
+
+                        <b-table-column field="number_follow" label="Số lượt theo dõi" centered>
+                            {{ props.row.number_follow }}
+                        </b-table-column>
+
+                        <b-table-column field="" label="" centered>
+                            <button class="button is-danger" @click="removeTopic(props.row.topic_id)">
+                                <i class="fas fa-trash-alt btn-remove-topic"></i>
+                                Xóa
+                            </button>
+                        </b-table-column>
+                    </template>
+
+                    <template slot="empty">
+                        <section class="section">
+                            <div class="content has-text-grey has-text-centered">
+                                <p>
+                                    <b-icon
+                                            icon="emoticon-sad"
+                                            size="is-large">
+                                    </b-icon>
+                                </p>
+                                <p>Nothing here.</p>
+                            </div>
+                        </section>
+                    </template>
+                </b-table>
             </div>
 
-            <b-table
-                    :data="topics"
-                    :mobile-cards="true">
+            <div v-if="isShowUser" class="container container-content">
+                <div class="header-topic" style="margin-bottom: 20px">
+                    <h1 class="title">Danh sách người dùng</h1>
+                </div>
 
-                <template slot-scope="props">
-                    <b-table-column field="topic_id" label="ID">
-                        {{ props.row.topic_id }}
-                    </b-table-column>
+                <b-table
+                        :data="users"
+                        :mobile-cards="true">
 
-                    <b-table-column field="name" label="Tên chủ đề">
-                        {{ props.row.name }}
-                    </b-table-column>
+                    <template slot-scope="props">
+                        <b-table-column field="user_id" label="ID">
+                            {{ props.row.user_id }}
+                        </b-table-column>
 
-                    <b-table-column field="number_post" label="Số bài đăng" centered>
-                        {{ props.row.number_post }}
-                    </b-table-column>
+                        <b-table-column field="name" label="Tên người dùng">
+                            {{ props.row.name }}
+                        </b-table-column>
 
-                    <b-table-column field="number_follow" label="Số lượt theo dõi" centered>
-                        {{ props.row.number_follow }}
-                    </b-table-column>
+                        <b-table-column field="active" label="Trạng thái" centered>
+                            {{ props.row.active }}
+                        </b-table-column>
 
-                    <b-table-column field="" label="" centered>
-                        <button class="button is-danger" @click="removeTopic(props.row.topic_id)">
-                            <i class="fas fa-trash-alt btn-remove-topic"></i>
-                            Xóa
-                        </button>
-                    </b-table-column>
-                </template>
+                        <b-table-column field="" label="" centered>
+                            <button class="button is-danger" @click="lockUser(props.row.user_id, props.row.active)">
+                                <i class="fas fa-lock" style="margin-right: 5px"></i>
+                                Khóa
+                            </button>
+                        </b-table-column>
+                    </template>
 
-                <template slot="empty">
-                    <section class="section">
-                        <div class="content has-text-grey has-text-centered">
-                            <p>
-                                <b-icon
-                                        icon="emoticon-sad"
-                                        size="is-large">
-                                </b-icon>
-                            </p>
-                            <p>Nothing here.</p>
+                    <template slot="empty">
+                        <section class="section">
+                            <div class="content has-text-grey has-text-centered">
+                                <p>
+                                    <b-icon
+                                            icon="emoticon-sad"
+                                            size="is-large">
+                                    </b-icon>
+                                </p>
+                                <p>Nothing here.</p>
+                            </div>
+                        </section>
+                    </template>
+                </b-table>
+            </div>
+
+            <b-modal :active.sync="isShowAddTopicModal"
+                     has-modal-card
+                     trap-focus
+                     :destroy-on-hide="false"
+                     aria-role="dialog"
+                     aria-modal>
+                <div class="custom-card">
+                    <div class="card-header justify-content-center">
+                        <h1>Thêm chủ đề</h1>
+                    </div>
+                    <div class="card-content columns">
+                        <div class="card-content-left column">
+                            <b-field label="Tên chủ đề">
+                                <b-input v-model="topicName"></b-input>
+                            </b-field>
+                            <b-field label="Giới thiệu">
+                                <b-input v-model="topicIntro"></b-input>
+                            </b-field>
+                            <b-field label="Mô tả">
+                                <b-input v-model="topicDescription"></b-input>
+                            </b-field>
                         </div>
-                    </section>
-                </template>
-            </b-table>
 
-
+                        <div class="card-content-right column">
+                            <b-field>
+                                <b-upload v-model="topicAvatar">
+                                    <a class="button is-primary">
+                                        <b-icon icon="upload"></b-icon>
+                                        <span>Ảnh đại diện</span>
+                                    </a>
+                                </b-upload>
+                                <span class="file-name" v-if="topicAvatar">{{ topicAvatar.name }}</span>
+                            </b-field>
+                            <b-field>
+                                <b-upload v-model="topicBackground">
+                                    <a class="button is-primary">
+                                        <b-icon icon="upload"></b-icon>
+                                        <span>Ảnh nền</span>
+                                    </a>
+                                </b-upload>
+                                <span class="file-name" v-if="topicBackground">{{ topicBackground.name }}</span>
+                            </b-field>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <b-button type="is-primary" @click="addTopic">Lưu</b-button>
+                    </div>
+                </div>
+            </b-modal>
         </div>
 
-        <b-modal :active.sync="isShowAddTopicModal"
-                 has-modal-card
-                 trap-focus
-                 :destroy-on-hide="false"
-                 aria-role="dialog"
-                 aria-modal>
-            <div class="custom-card">
-                <div class="card-header justify-content-center">
-                    <h1>Thêm chủ đề</h1>
-                </div>
-                <div class="card-content columns">
-                    <div class="card-content-left column">
-                        <b-field label="Tên chủ đề">
-                            <b-input v-model="topicName"></b-input>
-                        </b-field>
-                        <b-field label="Giới thiệu">
-                            <b-input v-model="topicIntro"></b-input>
-                        </b-field>
-                        <b-field label="Mô tả">
-                            <b-input v-model="topicDescription"></b-input>
-                        </b-field>
-                    </div>
-
-                    <div class="card-content-right column">
-                        <b-field>
-                            <b-upload v-model="topicAvatar">
-                                <a class="button is-primary">
-                                    <b-icon icon="upload"></b-icon>
-                                    <span>Ảnh đại diện</span>
-                                </a>
-                            </b-upload>
-                            <span class="file-name" v-if="topicAvatar">{{ topicAvatar.name }}</span>
-                        </b-field>
-                        <b-field>
-                            <b-upload v-model="topicBackground">
-                                <a class="button is-primary">
-                                    <b-icon icon="upload"></b-icon>
-                                    <span>Ảnh nền</span>
-                                </a>
-                            </b-upload>
-                            <span class="file-name" v-if="topicBackground">{{ topicBackground.name }}</span>
-                        </b-field>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <b-button type="is-primary" @click="addTopic">Lưu</b-button>
-                </div>
-            </div>
-        </b-modal>
+        <div v-else>
+            <h1 class="title is-1">
+                Bạn không có quyền thực hiện chức năng này
+            </h1>
+        </div>
     </div>
 </template>
 
 <script>
     import * as TopicService from "../services/topic_service";
+    import * as UserService from "../services/user_service";
     import firebase from "firebase";
 
     export default {
@@ -120,47 +177,43 @@
         components: {},
         data() {
             return {
+                user: Object,
+                roleUser: '',
                 isShowAddTopicModal: false,
                 topicAvatar: null,
                 topicBackground: null,
                 topics: [],
+                users: [],
                 topicName: '',
                 topicIntro: '',
                 topicDescription: '',
-                columns: [
-                    {
-                        field: 'topic_id',
-                        label: 'ID',
-                        searchable: true,
-                    },
-                    {
-                        field: 'name',
-                        label: 'Tên chủ đề',
-                        searchable: true,
-                    },
-                    {
-                        field: 'number_post',
-                        label: 'Số bài đăng',
-                        numeric: true,
-                        centered: true
-                    },
-                    {
-                        field: 'number_follow',
-                        label: 'Số Lượt theo dõi',
-                        numeric: true,
-                        centered: true
-                    }
-                ]
+                isShowTopic: true,
+                isShowUser: false
             }
         },
         mounted() {
+            this.getUser().then(user => {
+                this.getRoleUser();
+            });
             this.getAllTopic();
+            this.getAllUser();
         },
         methods: {
-            getAllTopic: function () {
+            getUser: async function () {
+                let olduser = JSON.parse(localStorage.getItem('user'));
+                let response = await UserService.getById(olduser.user_id);
+                this.user = response.data;
+            },
+            getRoleUser: function () {
+                this.roleUser = this.user.role_group_ids[0];
+            },
+            getAllTopic: async function () {
                 TopicService.getAll().then(response => {
                     this.topics = response.data;
                 });
+            },
+            getAllUser: async function () {
+                this.users = (await UserService.getAll()).data;
             },
             addTopic: function () {
                 let avatar = null;
@@ -285,9 +338,30 @@
                                 type: 'is-success'
                             });
                         });
-                        this.getAllTopic();
+                        await this.getAllTopic();
                     }
-                })
+                });
+            },
+            showTopic: function () {
+                this.isShowTopic = true;
+                this.isShowUser = false;
+            },
+            showUser: function () {
+                this.isShowUser = true;
+                this.isShowTopic = false;
+            },
+            lockUser: async function (userId, active) {
+                let updatedActive;
+                if (active == null || active === false || active === undefined)
+                    updatedActive = true;
+                if (active === true) {
+                    updatedActive = false;
+                }
+
+                let response = await UserService.lockUser({
+                    userId: userId,
+                    active: updatedActive
+                });
             }
         }
     }

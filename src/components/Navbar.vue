@@ -50,6 +50,9 @@
                 </b-navbar-item>
 
                 <b-navbar-item v-if="user != null" class="custom-navbar-item" tag="div">
+                    <div v-if="user.active === false">
+                        <span style="color: red; font-weight: bold">Tài khoản đã bị khóa</span>
+                    </div>
                     <router-link :to="{path: 'user', query: {userId: user.user_id}}">
                         <div class="btn-user-right">
                             <div>
@@ -140,6 +143,7 @@
     import * as PostService from "../services/post_service";
     import {Constant} from '../commons/constant';
     import {debounce} from "lodash";
+    import * as UserService from "../services/user_service";
 
     export default {
         name: "Navbar",
@@ -173,8 +177,11 @@
         },
         methods: {
             getUser: async function () {
-                let user = localStorage.getItem('user');
-                await this.$store.dispatch('setUserAction', JSON.parse(user));
+                let olduser = JSON.parse(localStorage.getItem('user'));
+                let response = await UserService.getById(olduser.user_id);
+                let user = response.data;
+                await this.updateStateUser(user);
+                await this.$store.dispatch('setUserAction', user);
             },
             countNotification: function () {
                 if (this.user != null) {
@@ -182,7 +189,8 @@
                         NotificationService.countNotSeenByUserId(this.user.user_id).then(respone => {
                             this.numberNoti = respone.data.count;
                         })
-                    }, 10000)
+                        //TODO
+                    }, 5000)
                 }
             },
             switchPopupNoti: async function () {
@@ -275,6 +283,11 @@
                 let startIndex = index - 3 < 0 ? 0 : index - 3;
                 let rawText = rawContent.splice(startIndex, index + 3).join(' ');
                 return '<p>... ' + rawText + '...</p>';
+            },
+            updateStateUser: async function (user) {
+                await this.$store.dispatch('setUserAction', user);
+                localStorage.removeItem('user');
+                localStorage.setItem('user', JSON.stringify(user));
             }
         }
     };

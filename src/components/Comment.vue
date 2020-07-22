@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="action-comment-bottom">
+                <div v-if="user.active !== false" class="action-comment-bottom">
                     <span v-if="comment.number_like !== undefined && comment.number_like > 0 && comment.user_status === 'like'"
                           @click="updateUserStatus">Bỏ thích</span>
                     <span v-else @click="updateUserStatus">Thích</span>
@@ -72,8 +72,11 @@
             </div>
 
             <div class="container-input-comment">
-                <b-input v-if="isLockPost" placeholder="Bài viết đã bị khóa" disabled rounded></b-input>
-                <ckeditor v-else :editor="editor" v-model="valueReplyComment" :config="editorConfig"/>
+                <b-input v-if="user.active === false" placeholder="Tài khoản đã bị khóa" disabled rounded></b-input>
+                <div v-else>
+                    <b-input v-if="isLockPost" placeholder="Bài viết đã bị khóa" disabled rounded></b-input>
+                    <ckeditor v-else :editor="editor" v-model="valueReplyComment" :config="editorConfig"/>
+                </div>
             </div>
 
             <div v-if="isLockPost !== true" class="btn-send-comment is-flex" @click="sendChildComment()">

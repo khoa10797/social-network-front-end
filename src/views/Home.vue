@@ -29,8 +29,12 @@
                         </figure>
                     </div>
                     <div class="input-card-header-post">
-                        <input @click="showAddPostModal = true" class="input is-rounded" type="text"
+                        <input v-if="user.active !== false" @click="showAddPostModal = true" class="input is-rounded"
+                               type="text"
                                placeholder="Bạn đang nghĩ gì..." readonly>
+                        <input v-else class="input is-rounded"
+                               type="text"
+                               placeholder="Tài khoản đã bị khóa..." readonly>
                     </div>
                 </div>
 
