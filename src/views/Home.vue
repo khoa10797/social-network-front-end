@@ -4,72 +4,13 @@
         <div class="container container-list-post">
             <div class="menu-topic">
                 <ul class="menu-list">
-                    <li>
+                    <li v-for="topic in allTopic" :key="topic.topic_id">
                         <div>
-                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
+                            <router-link :to="{path: 'topic', query: {topicId: topic.topic_id}}">
                                 <div class="custom-menu-item">
-                                    <img src="../assets/icons/smartphone-pngrepo-com.png" alt="">
-                                    <span>Điện thoại</span>
-                                </div>
-                            </router-link>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
-                                <div class="custom-menu-item">
-                                    <img src="../assets/icons/tablet-pngrepo-com.png" alt="">
-                                    <span>Máy tính bảng</span>
-                                </div>
-                            </router-link>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
-                                <div class="custom-menu-item">
-                                    <img src="../assets/icons/smartwatch-pngrepo-com.png" alt="">
-                                    <span>Đồng hồ thông minh</span>
-                                </div>
-                            </router-link>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
-                                <div class="custom-menu-item">
-                                    <img src="../assets/icons/laptop-pngrepo-com.png" alt="">
-                                    <span>Máy tính</span>
-                                </div>
-                            </router-link>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
-                                <div class="custom-menu-item">
-                                    <img src="../assets/icons/television-pngrepo-com.png" alt="">
-                                    <span>Ti vi</span>
-                                </div>
-                            </router-link>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
-                                <div class="custom-menu-item">
-                                    <img src="../assets/icons/camera-pngrepo-com.png" alt="">
-                                    <span>Máy ảnh</span>
-                                </div>
-                            </router-link>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <router-link :to="{path: 'topic', query: {topicId: '5ec3f62112c8d847d47a2acf'}}">
-                                <div class="custom-menu-item">
-                                    <img src="../assets/icons/headphones-pngrepo-com.png" alt="">
-                                    <span>Loa - Tai nghe</span>
+                                    <img v-if="topic.icon != null && topic.icon !== undefined" :src="topic.icon" alt="">
+                                    <img v-else :src="DEFAULT_AVATAR" alt="">
+                                    <span>{{topic.name}}</span>
                                 </div>
                             </router-link>
                         </div>
@@ -120,7 +61,7 @@
 
                         <div class="choose-topic">
                             <b-select placeholder="Chọn chủ đề" size="is-small" v-model="topicId" rounded>
-                                <option v-for="item in chooseTopic" :value="item.topic_id" >
+                                <option v-for="item in chooseTopic" :value="item.topic_id">
                                     {{item.name}}
                                 </option>
                             </b-select>
@@ -206,7 +147,8 @@
                     placeholder: 'Nhập nội dung...'
                 },
                 topicId: '',
-                chooseTopic: []
+                chooseTopic: [],
+                allTopic: []
             }
         },
         computed: {
@@ -284,6 +226,7 @@
             },
             getTopic: async function () {
                 this.chooseTopic = (await TopicService.getAll()).data;
+                this.allTopic = (await TopicService.getAll()).data;
             }
         }
     };
