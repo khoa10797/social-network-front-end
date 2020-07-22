@@ -85,9 +85,15 @@
                         </b-table-column>
 
                         <b-table-column field="" label="" centered>
-                            <button class="button is-danger" @click="lockUser(props.row.user_id, props.row.active)">
+                            <button v-if="props.row.active" class="button is-danger"
+                                    @click="lockUser(props.row.user_id, props.row.active, props.row)">
                                 <i class="fas fa-lock" style="margin-right: 5px"></i>
                                 Khóa
+                            </button>
+                            <button v-else class="button is-success"
+                                    @click="lockUser(props.row.user_id, props.row.active, props.row)">
+                                <i class="fas fa-lock-open" style="margin-right: 5px"></i>
+                                Mở khóa
                             </button>
                         </b-table-column>
                     </template>
@@ -350,7 +356,7 @@
                 this.isShowUser = true;
                 this.isShowTopic = false;
             },
-            lockUser: async function (userId, active) {
+            lockUser: async function (userId, active, row) {
                 let updatedActive;
                 if (active == null || active === false || active === undefined)
                     updatedActive = true;
@@ -358,10 +364,12 @@
                     updatedActive = false;
                 }
 
-                let response = await UserService.lockUser({
+                let user = (await UserService.lockUser({
                     userId: userId,
                     active: updatedActive
-                });
+                })).data;
+
+                row.active = user.active;
             }
         }
     }
