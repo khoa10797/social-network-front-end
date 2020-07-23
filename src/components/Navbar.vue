@@ -190,7 +190,7 @@
                             this.numberNoti = respone.data.count;
                         })
                         //TODO
-                    }, 5000)
+                    }, 2000)
                 }
             },
             switchPopupNoti: async function () {
