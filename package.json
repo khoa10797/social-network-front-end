@@ -16,7 +16,7 @@
     "core-js": "^3.6.4",
     "firebase": "^7.13.2",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "sockjs-client": "^1.4.0",
     "vue": "^2.6.11",
     "vue-image-lightbox": "^7.1.0",
